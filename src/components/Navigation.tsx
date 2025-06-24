@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Home, BookOpen, Coins, Trophy } from 'lucide-react';
+import { Home, BookOpen, Coins, Bot, Award } from 'lucide-react';
 
 interface NavigationProps {
-  currentView: 'dashboard' | 'quiz' | 'claim';
-  setCurrentView: (view: 'dashboard' | 'quiz' | 'claim') => void;
+  currentView: 'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges';
+  setCurrentView: (view: 'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges') => void;
   currentPoints: number;
   completedQuizzes: number;
   totalQuizzes: number;
@@ -32,15 +32,27 @@ export const Navigation: React.FC<NavigationProps> = ({
       badge: `${completedQuizzes}/${totalQuizzes}`,
     },
     {
+      id: 'chatbot' as const,
+      label: 'AI Assistant',
+      icon: Bot,
+      badge: null,
+    },
+    {
       id: 'claim' as const,
       label: 'Claim Tokens',
       icon: Coins,
       badge: currentPoints > 0 ? currentPoints.toString() : null,
     },
+    {
+      id: 'badges' as const,
+      label: 'NFT Badges',
+      icon: Award,
+      badge: null,
+    },
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border p-1 inline-flex space-x-1">
+    <div className="bg-white rounded-xl shadow-sm border p-1 flex flex-wrap gap-1">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = currentView === item.id;
@@ -58,7 +70,8 @@ export const Navigation: React.FC<NavigationProps> = ({
             }`}
           >
             <Icon className="w-4 h-4 mr-2" />
-            {item.label}
+            <span className="hidden sm:inline">{item.label}</span>
+            <span className="sm:hidden">{item.label.split(' ')[0]}</span>
             {item.badge && (
               <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
                 isActive 

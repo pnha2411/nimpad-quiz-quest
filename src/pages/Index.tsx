@@ -4,6 +4,8 @@ import { WalletConnection } from '@/components/WalletConnection';
 import { QuizEngine } from '@/components/QuizEngine';
 import { Dashboard } from '@/components/Dashboard';
 import { TokenClaiming } from '@/components/TokenClaiming';
+import { AIChatbot } from '@/components/AIChatbot';
+import { NFTBadges } from '@/components/NFTBadges';
 import { Navigation } from '@/components/Navigation';
 import { useWallet } from '@/hooks/useWallet';
 import { useQuiz } from '@/hooks/useQuiz';
@@ -11,7 +13,7 @@ import { useQuiz } from '@/hooks/useQuiz';
 const Index = () => {
   const { isConnected, account, connectWallet, disconnectWallet } = useWallet();
   const { currentPoints, totalQuizzes, completedQuizzes } = useQuiz();
-  const [currentView, setCurrentView] = useState<'dashboard' | 'quiz' | 'claim'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges'>('dashboard');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -56,8 +58,10 @@ const Index = () => {
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                 <p className="text-sm text-blue-800">
                   📚 Complete quizzes based on Citrea documentation<br/>
+                  🤖 Ask our AI assistant about DeFi and BtcFi<br/>
                   🎯 Earn points for correct answers<br/>
-                  💰 Redeem points for actual tokens
+                  🏆 Mint NFT badges to showcase your achievements<br/>
+                  💰 Claim tokens through on-chain transactions
                 </p>
               </div>
             </div>
@@ -96,6 +100,20 @@ const Index = () => {
                   onBack={() => setCurrentView('dashboard')}
                 />
               )}
+
+              {currentView === 'chatbot' && (
+                <AIChatbot 
+                  onBack={() => setCurrentView('dashboard')}
+                />
+              )}
+
+              {currentView === 'badges' && (
+                <NFTBadges 
+                  availablePoints={currentPoints}
+                  completedQuizzes={completedQuizzes.length}
+                  onBack={() => setCurrentView('dashboard')}
+                />
+              )}
             </div>
           </>
         )}
@@ -117,7 +135,7 @@ const Index = () => {
               </a>
             </div>
             <div className="text-center md:text-right">
-              <p>Learn • Earn • Grow</p>
+              <p>Learn • Ask • Earn • Collect</p>
             </div>
           </div>
         </div>
