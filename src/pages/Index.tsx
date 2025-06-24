@@ -68,7 +68,7 @@ const Index = () => {
               currentView={currentView} 
               setCurrentView={setCurrentView}
               currentPoints={currentPoints}
-              completedQuizzes={completedQuizzes}
+              completedQuizzes={completedQuizzes.length}
               totalQuizzes={totalQuizzes}
             />
             
@@ -76,7 +76,7 @@ const Index = () => {
               {currentView === 'dashboard' && (
                 <Dashboard 
                   points={currentPoints}
-                  completedQuizzes={completedQuizzes}
+                  completedQuizzes={completedQuizzes.length}
                   totalQuizzes={totalQuizzes}
                   onStartQuiz={() => setCurrentView('quiz')}
                   onClaimTokens={() => setCurrentView('claim')}

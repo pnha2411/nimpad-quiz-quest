@@ -4,6 +4,13 @@ import { ethers } from 'ethers';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { toast } from '@/hooks/use-toast';
 
+// Extend Window interface to include ethereum
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 interface WalletState {
   isConnected: boolean;
   account: string | null;
@@ -35,7 +42,7 @@ export const useWallet = () => {
       }
 
       // Request account access
-      const accounts = await provider.request({ 
+      const accounts = await (provider as any).request({ 
         method: 'eth_requestAccounts' 
       });
 
@@ -48,9 +55,9 @@ export const useWallet = () => {
         return;
       }
 
-      const ethersProvider = new ethers.BrowserProvider(provider);
+      const ethersProvider = new ethers.BrowserProvider(provider as any);
       const signer = await ethersProvider.getSigner();
-      const chainId = await provider.request({ method: 'eth_chainId' });
+      const chainId = await (provider as any).request({ method: 'eth_chainId' });
 
       setWalletState({
         isConnected: true,
@@ -146,8 +153,10 @@ export const useWallet = () => {
       window.ethereum.on('chainChanged', handleChainChanged);
 
       return () => {
-        window.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
-        window.ethereum?.removeListener('chainChanged', handleChainChanged);
+        if (window.ethereum?.removeListener) {
+          window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+          window.ethereum.removeListener('chainChanged', handleChainChanged);
+        }
       };
     }
   }, []);
