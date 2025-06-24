@@ -31,7 +31,41 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({ onComplete, onBack }) =>
       });
       onComplete();
     }
-  }, [availableQuizzes, onComplete]);
+  }, [availableQuizzes.length, onComplete]);
+
+  // Add loading state while checking for available quizzes
+  if (availableQuizzes.length === 0) {
+    return (
+      <Card className="max-w-2xl mx-auto">
+        <CardContent className="text-center py-12">
+          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">All Quizzes Completed!</h3>
+          <p className="text-gray-600 mb-6">
+            You've successfully completed all available quizzes. Check back later for new content!
+          </p>
+          <Button onClick={onBack}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Add safety check for currentQuiz
+  if (!currentQuiz) {
+    return (
+      <Card className="max-w-2xl mx-auto">
+        <CardContent className="text-center py-12">
+          <p className="text-gray-600 mb-6">Loading quiz...</p>
+          <Button onClick={onBack}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (showResult) return;
@@ -73,24 +107,6 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({ onComplete, onBack }) =>
     });
     onComplete();
   };
-
-  if (availableQuizzes.length === 0) {
-    return (
-      <Card className="max-w-2xl mx-auto">
-        <CardContent className="text-center py-12">
-          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">All Quizzes Completed!</h3>
-          <p className="text-gray-600 mb-6">
-            You've successfully completed all available quizzes. Check back later for new content!
-          </p>
-          <Button onClick={onBack}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
 
   if (quizCompleted) {
     return (
