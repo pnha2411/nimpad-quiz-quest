@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,8 +15,6 @@ interface TokenClaimingProps {
 const CITREA_CONTRACTS = {
   POINTS_TRACKER: "0x1234567890123456789012345678901234567890", // Replace with actual points contract
   TOKEN_CLAIM: "0x0987654321098765432109876543210987654321",    // Replace with actual Citrea token contract
-  NETWORK_ID: "0x5ffd", // Citrea testnet chain ID - update as needed
-  CITREA_RPC: "https://rpc.devnet.citrea.xyz", // Citrea RPC endpoint
 };
 
 // Example ABI for token claiming - replace with actual contract ABI
@@ -32,78 +29,11 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
   availablePoints,
   onBack,
 }) => {
-  const { isConnected, account, signer, chainId } = useWallet();
+  const { isConnected, account, signer, chainId, isOnCitreaNetwork, CITREA_TESTNET } = useWallet();
   const [isLoading, setIsLoading] = useState(false);
   const [claimStatus, setClaimStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle');
   const [txHash, setTxHash] = useState<string>('');
   const [gasEstimate, setGasEstimate] = useState<string>('');
-
-  const checkNetwork = async () => {
-    if (chainId !== CITREA_CONTRACTS.NETWORK_ID) {
-      toast({
-        title: "Wrong network",
-        description: "Please switch to Citrea network to claim tokens.",
-        variant: "destructive",
-      });
-      
-      try {
-        // Try to switch to Citrea network
-        await (window as any).ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: CITREA_CONTRACTS.NETWORK_ID }],
-        });
-      } catch (switchError: any) {
-        // If network is not added, try to add it
-        if (switchError.code === 4902) {
-          try {
-            await (window as any).ethereum.request({
-              method: 'wallet_addEthereumChain',
-              params: [{
-                chainId: CITREA_CONTRACTS.NETWORK_ID,
-                chainName: 'Citrea Devnet',
-                nativeCurrency: {
-                  name: 'Citrea Bitcoin',
-                  symbol: 'cBTC',
-                  decimals: 18
-                },
-                rpcUrls: [CITREA_CONTRACTS.CITREA_RPC],
-                blockExplorerUrls: ['https://explorer.devnet.citrea.xyz/']
-              }]
-            });
-          } catch (addError) {
-            console.error('Failed to add Citrea network:', addError);
-          }
-        }
-      }
-      return false;
-    }
-    return true;
-  };
-
-  const estimateGas = async () => {
-    if (!signer || !isConnected) return;
-
-    try {
-      const contract = new ethers.Contract(
-        CITREA_CONTRACTS.TOKEN_CLAIM,
-        TOKEN_CLAIM_ABI,
-        signer
-      );
-
-      // Estimate gas for the claim transaction
-      const gasLimit = await contract.claimTokens.estimateGas(availablePoints);
-      const gasPrice = await signer.provider?.getFeeData();
-      
-      if (gasPrice?.gasPrice) {
-        const totalGas = gasLimit * gasPrice.gasPrice;
-        const gasInEth = ethers.formatEther(totalGas);
-        setGasEstimate(parseFloat(gasInEth).toFixed(6));
-      }
-    } catch (error) {
-      console.error('Gas estimation failed:', error);
-      setGasEstimate('~0.001'); // Fallback estimate
-    }
-  };
 
   const handleClaimTokens = async () => {
     if (!isConnected || !signer || availablePoints === 0) {
@@ -116,8 +46,12 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
     }
 
     // Check if we're on the correct network
-    const isCorrectNetwork = await checkNetwork();
-    if (!isCorrectNetwork) {
+    if (!isOnCitreaNetwork()) {
+      toast({
+        title: "Wrong network",
+        description: "Please switch to Citrea Testnet to claim tokens.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -181,9 +115,6 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
         });
 
         console.log('Token claim successful:', receipt);
-
-        // You might want to update the user's points here
-        // or trigger a refresh of the dashboard
         
       } else {
         throw new Error('Transaction failed');
@@ -216,15 +147,8 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
     }
   };
 
-  // Estimate gas on component mount
-  React.useEffect(() => {
-    if (isConnected && signer && availablePoints > 0) {
-      estimateGas();
-    }
-  }, [isConnected, signer, availablePoints]);
-
   const getExplorerUrl = (txHash: string) => {
-    return `https://explorer.devnet.citrea.xyz/tx/${txHash}`;
+    return `${CITREA_TESTNET.BLOCK_EXPLORER_URLS[0]}/tx/${txHash}`;
   };
 
   return (
@@ -241,21 +165,24 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
       </div>
 
       {/* Network Info */}
-      <Card className="bg-blue-50 border-blue-200">
+      <Card className={`${isOnCitreaNetwork() ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
         <CardContent className="py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="font-medium text-blue-900 mb-1">Citrea Network</h4>
-              <p className="text-sm text-blue-700">
-                Ensure you're connected to Citrea Devnet
+              <h4 className={`font-medium mb-1 ${isOnCitreaNetwork() ? 'text-green-900' : 'text-red-900'}`}>
+                {isOnCitreaNetwork() ? 'Connected to Citrea Testnet' : 'Wrong Network'}
+              </h4>
+              <p className={`text-sm ${isOnCitreaNetwork() ? 'text-green-700' : 'text-red-700'}`}>
+                {isOnCitreaNetwork() 
+                  ? 'Ready to claim tokens' 
+                  : 'Please switch to Citrea Testnet'}
               </p>
             </div>
             <div className="text-right">
-              <div className="text-sm text-blue-600">Chain ID</div>
+              <div className={`text-sm ${isOnCitreaNetwork() ? 'text-green-600' : 'text-red-600'}`}>
+                Chain ID
+              </div>
               <div className="font-mono text-sm">{chainId || 'Not connected'}</div>
-              {chainId !== CITREA_CONTRACTS.NETWORK_ID && chainId && (
-                <div className="text-xs text-red-600 mt-1">Wrong network!</div>
-              )}
             </div>
           </div>
         </CardContent>
@@ -364,7 +291,7 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
                     <li>• Ensure you have enough cBTC for gas fees</li>
                     <li>• Tokens will be sent to your connected wallet address</li>
                     <li>• This action cannot be undone once confirmed</li>
-                    <li>• Contract is deployed on Citrea Devnet</li>
+                    <li>• Contract is deployed on Citrea Testnet</li>
                     <li>• You may only claim once per day (if applicable)</li>
                   </ul>
                 </div>
@@ -375,7 +302,7 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
           {/* Claim Button */}
           <Button 
             onClick={handleClaimTokens}
-            disabled={availablePoints === 0 || isLoading || !isConnected || claimStatus === 'success' || chainId !== CITREA_CONTRACTS.NETWORK_ID}
+            disabled={availablePoints === 0 || isLoading || !isConnected || claimStatus === 'success' || !isOnCitreaNetwork()}
             className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-lg py-3"
           >
             {isLoading ? (
@@ -390,8 +317,8 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
               </>
             ) : availablePoints === 0 ? (
               'No Tokens to Claim'
-            ) : chainId !== CITREA_CONTRACTS.NETWORK_ID ? (
-              'Switch to Citrea Network'
+            ) : !isOnCitreaNetwork() ? (
+              'Switch to Citrea Testnet'
             ) : (
               <>
                 <Coins className="w-5 h-5 mr-2" />

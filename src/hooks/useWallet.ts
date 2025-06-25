@@ -19,6 +19,19 @@ interface WalletState {
   chainId: string | null;
 }
 
+// Citrea testnet configuration
+const CITREA_TESTNET = {
+  CHAIN_ID: '0x5ffd', // 24573 in decimal
+  CHAIN_NAME: 'Citrea Testnet',
+  RPC_URLS: ['https://rpc.testnet.citrea.xyz'],
+  NATIVE_CURRENCY: {
+    name: 'Citrea Bitcoin',
+    symbol: 'cBTC',
+    decimals: 18
+  },
+  BLOCK_EXPLORER_URLS: ['https://explorer.testnet.citrea.xyz']
+};
+
 export const useWallet = () => {
   const [walletState, setWalletState] = useState<WalletState>({
     isConnected: false,
@@ -59,6 +72,9 @@ export const useWallet = () => {
       const signer = await ethersProvider.getSigner();
       const chainId = await (provider as any).request({ method: 'eth_chainId' });
 
+      console.log('Connected to chain:', chainId);
+      console.log('Citrea testnet chain ID:', CITREA_TESTNET.CHAIN_ID);
+
       setWalletState({
         isConnected: true,
         account: accounts[0],
@@ -70,13 +86,47 @@ export const useWallet = () => {
       // Store connection state
       localStorage.setItem('walletConnected', 'true');
 
-      toast({
-        title: "Wallet connected successfully",
-        description: `Connected to ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`,
-      });
+      // Check if we're on the correct network
+      if (chainId !== CITREA_TESTNET.CHAIN_ID) {
+        toast({
+          title: "Wrong network detected",
+          description: "Please switch to Citrea Testnet",
+          variant: "destructive",
+        });
+        
+        // Try to switch to Citrea network
+        try {
+          await (provider as any).request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: CITREA_TESTNET.CHAIN_ID }],
+          });
+        } catch (switchError: any) {
+          // If network is not added, try to add it
+          if (switchError.code === 4902) {
+            try {
+              await (provider as any).request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                  chainId: CITREA_TESTNET.CHAIN_ID,
+                  chainName: CITREA_TESTNET.CHAIN_NAME,
+                  nativeCurrency: CITREA_TESTNET.NATIVE_CURRENCY,
+                  rpcUrls: CITREA_TESTNET.RPC_URLS,
+                  blockExplorerUrls: CITREA_TESTNET.BLOCK_EXPLORER_URLS
+                }]
+              });
+            } catch (addError) {
+              console.error('Failed to add Citrea network:', addError);
+            }
+          }
+        }
+      } else {
+        toast({
+          title: "Wallet connected successfully",
+          description: `Connected to ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)} on Citrea Testnet`,
+        });
+      }
 
       console.log('Wallet connected:', accounts[0]);
-      console.log('Chain ID:', chainId);
 
     } catch (error) {
       console.error('Error connecting wallet:', error);
@@ -120,6 +170,10 @@ export const useWallet = () => {
     }
   };
 
+  const isOnCitreaNetwork = () => {
+    return walletState.chainId === CITREA_TESTNET.CHAIN_ID;
+  };
+
   // Auto-connect if previously connected
   useEffect(() => {
     const wasConnected = localStorage.getItem('walletConnected');
@@ -143,10 +197,25 @@ export const useWallet = () => {
       };
 
       const handleChainChanged = (chainId: string) => {
+        console.log('Chain changed to:', chainId);
         setWalletState(prev => ({
           ...prev,
           chainId,
         }));
+        
+        // Show notification about network change
+        if (chainId === CITREA_TESTNET.CHAIN_ID) {
+          toast({
+            title: "Network switched",
+            description: "Successfully connected to Citrea Testnet",
+          });
+        } else {
+          toast({
+            title: "Wrong network",
+            description: "Please switch to Citrea Testnet",
+            variant: "destructive",
+          });
+        }
       };
 
       window.ethereum.on('accountsChanged', handleAccountsChanged);
@@ -166,5 +235,7 @@ export const useWallet = () => {
     connectWallet,
     disconnectWallet,
     switchNetwork,
+    isOnCitreaNetwork,
+    CITREA_TESTNET,
   };
 };

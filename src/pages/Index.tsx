@@ -11,9 +11,16 @@ import { useWallet } from '@/hooks/useWallet';
 import { useQuiz } from '@/hooks/useQuiz';
 
 const Index = () => {
-  const { isConnected, account, connectWallet, disconnectWallet } = useWallet();
+  const { isConnected, account, connectWallet, disconnectWallet, isOnCitreaNetwork } = useWallet();
   const { currentPoints, totalQuizzes, completedQuizzes } = useQuiz();
   const [currentView, setCurrentView] = useState<'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges'>('dashboard');
+
+  // Redirect to dashboard when wallet is successfully connected
+  useEffect(() => {
+    if (isConnected && account) {
+      setCurrentView('dashboard');
+    }
+  }, [isConnected, account]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -30,12 +37,19 @@ const Index = () => {
               </h1>
               <span className="text-sm text-gray-500 hidden sm:inline">Learn to Earn on Citrea</span>
             </div>
-            <WalletConnection 
-              isConnected={isConnected}
-              account={account}
-              onConnect={connectWallet}
-              onDisconnect={disconnectWallet}
-            />
+            <div className="flex items-center space-x-4">
+              {isConnected && !isOnCitreaNetwork() && (
+                <div className="text-sm text-red-600 bg-red-50 px-3 py-1 rounded-full">
+                  Wrong Network
+                </div>
+              )}
+              <WalletConnection 
+                isConnected={isConnected}
+                account={account}
+                onConnect={connectWallet}
+                onDisconnect={disconnectWallet}
+              />
+            </div>
           </div>
         </div>
       </header>
@@ -62,6 +76,11 @@ const Index = () => {
                   🎯 Earn points for correct answers<br/>
                   🏆 Mint NFT badges to showcase your achievements<br/>
                   💰 Claim tokens through on-chain transactions
+                </p>
+              </div>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-amber-800">
+                  <strong>Important:</strong> Make sure you're connected to Citrea Testnet to use all features.
                 </p>
               </div>
             </div>
