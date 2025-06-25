@@ -17,7 +17,7 @@ export const WalletConnection: React.FC<WalletConnectionProps> = ({
   onConnect,
   onDisconnect,
 }) => {
-  const { isOnCitreaNetwork, addCitreaNetwork, switchToCitreaNetwork, refreshNetworkInfo } = useWallet();
+  const { isOnCitreaNetwork, addCitreaNetwork, switchToCitreaNetwork, refreshNetworkInfo, chainId, CITREA_TESTNET } = useWallet();
 
   const handleRefreshNetwork = async () => {
     await refreshNetworkInfo();
@@ -36,11 +36,20 @@ export const WalletConnection: React.FC<WalletConnectionProps> = ({
 
   return (
     <div className="flex items-center space-x-3">
-      <div className="hidden sm:flex items-center space-x-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+      <div className={`hidden sm:flex items-center space-x-2 rounded-lg px-3 py-2 ${
+        isCorrectNetwork 
+          ? 'bg-green-50 border border-green-200' 
+          : 'bg-red-50 border border-red-200'
+      }`}>
         <div className={`w-2 h-2 rounded-full ${isCorrectNetwork ? 'bg-green-500' : 'bg-red-500'}`}></div>
-        <span className="text-sm font-medium text-green-800">
-          {account?.slice(0, 6)}...{account?.slice(-4)}
-        </span>
+        <div>
+          <span className={`text-sm font-medium ${isCorrectNetwork ? 'text-green-800' : 'text-red-800'}`}>
+            {account?.slice(0, 6)}...{account?.slice(-4)}
+          </span>
+          <div className={`text-xs ${isCorrectNetwork ? 'text-green-600' : 'text-red-600'}`}>
+            {isCorrectNetwork ? 'Citrea Testnet' : `Chain: ${chainId || 'Unknown'}`}
+          </div>
+        </div>
       </div>
       
       {!isCorrectNetwork && (
