@@ -41,6 +41,20 @@ export const useWallet = () => {
     chainId: null,
   });
 
+  const getCurrentChainId = async () => {
+    if (window.ethereum) {
+      try {
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        console.log('Current chain ID from wallet:', chainId);
+        return chainId;
+      } catch (error) {
+        console.error('Error getting chain ID:', error);
+        return null;
+      }
+    }
+    return null;
+  };
+
   const connectWallet = async () => {
     try {
       const provider = await detectEthereumProvider();
@@ -70,7 +84,9 @@ export const useWallet = () => {
 
       const ethersProvider = new ethers.BrowserProvider(provider as any);
       const signer = await ethersProvider.getSigner();
-      const chainId = await (provider as any).request({ method: 'eth_chainId' });
+      
+      // Get current chain ID directly from wallet
+      const chainId = await getCurrentChainId();
 
       console.log('Connected to chain:', chainId);
       console.log('Citrea testnet chain ID:', CITREA_TESTNET.CHAIN_ID);
@@ -90,7 +106,7 @@ export const useWallet = () => {
       if (chainId !== CITREA_TESTNET.CHAIN_ID) {
         toast({
           title: "Wrong network detected",
-          description: "Please switch to Citrea Testnet manually in MetaMask to access all features",
+          description: "Please switch to Citrea Testnet to access all features",
           variant: "destructive",
         });
       } else {
@@ -198,6 +214,18 @@ export const useWallet = () => {
     return walletState.chainId === CITREA_TESTNET.CHAIN_ID;
   };
 
+  const refreshNetworkInfo = async () => {
+    if (walletState.isConnected && window.ethereum) {
+      const chainId = await getCurrentChainId();
+      if (chainId !== walletState.chainId) {
+        setWalletState(prev => ({
+          ...prev,
+          chainId,
+        }));
+      }
+    }
+  };
+
   // Auto-connect if previously connected
   useEffect(() => {
     const wasConnected = localStorage.getItem('walletConnected');
@@ -220,8 +248,10 @@ export const useWallet = () => {
         }
       };
 
-      const handleChainChanged = (chainId: string) => {
+      const handleChainChanged = async (chainId: string) => {
         console.log('Chain changed to:', chainId);
+        
+        // Update the state immediately with the new chain ID
         setWalletState(prev => ({
           ...prev,
           chainId,
@@ -254,6 +284,14 @@ export const useWallet = () => {
     }
   }, []);
 
+  // Refresh network info periodically when connected
+  useEffect(() => {
+    if (walletState.isConnected) {
+      const interval = setInterval(refreshNetworkInfo, 5000); // Check every 5 seconds
+      return () => clearInterval(interval);
+    }
+  }, [walletState.isConnected]);
+
   return {
     ...walletState,
     connectWallet,
@@ -261,6 +299,7 @@ export const useWallet = () => {
     addCitreaNetwork,
     switchToCitreaNetwork,
     isOnCitreaNetwork,
+    refreshNetworkInfo,
     CITREA_TESTNET,
   };
 };

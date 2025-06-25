@@ -17,7 +17,11 @@ export const WalletConnection: React.FC<WalletConnectionProps> = ({
   onConnect,
   onDisconnect,
 }) => {
-  const { isOnCitreaNetwork, addCitreaNetwork, switchToCitreaNetwork } = useWallet();
+  const { isOnCitreaNetwork, addCitreaNetwork, switchToCitreaNetwork, refreshNetworkInfo } = useWallet();
+
+  const handleRefreshNetwork = async () => {
+    await refreshNetworkInfo();
+  };
 
   if (!isConnected) {
     return (
@@ -28,17 +32,28 @@ export const WalletConnection: React.FC<WalletConnectionProps> = ({
     );
   }
 
+  const isCorrectNetwork = isOnCitreaNetwork();
+
   return (
     <div className="flex items-center space-x-3">
       <div className="hidden sm:flex items-center space-x-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
-        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+        <div className={`w-2 h-2 rounded-full ${isCorrectNetwork ? 'bg-green-500' : 'bg-red-500'}`}></div>
         <span className="text-sm font-medium text-green-800">
           {account?.slice(0, 6)}...{account?.slice(-4)}
         </span>
       </div>
       
-      {!isOnCitreaNetwork() && (
+      {!isCorrectNetwork && (
         <div className="flex items-center space-x-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleRefreshNetwork}
+            className="hover:bg-gray-50 hover:border-gray-300"
+          >
+            <RefreshCw className="w-4 h-4 mr-1" />
+            Refresh
+          </Button>
           <Button 
             variant="outline" 
             size="sm" 
