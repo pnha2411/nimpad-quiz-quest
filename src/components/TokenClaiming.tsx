@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,16 +41,6 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
       toast({
         title: "Cannot claim tokens",
         description: "Please ensure your wallet is connected and you have points to claim.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Check if we're on the correct network
-    if (!isOnCitreaNetwork()) {
-      toast({
-        title: "Wrong network",
-        description: "Please switch to Citrea Testnet to claim tokens.",
         variant: "destructive",
       });
       return;
@@ -148,7 +139,32 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
   };
 
   const getExplorerUrl = (txHash: string) => {
+    // Use current network's explorer if available, otherwise fallback to Citrea
+    if (chainId && chainId !== CITREA_TESTNET.CHAIN_ID) {
+      return `https://etherscan.io/tx/${txHash}`; // Generic fallback
+    }
     return `${CITREA_TESTNET.BLOCK_EXPLORER_URLS[0]}/tx/${txHash}`;
+  };
+
+  const getCurrentNetworkName = () => {
+    if (isOnCitreaNetwork()) {
+      return 'Citrea Testnet';
+    }
+    
+    // Map common chain IDs to network names
+    const networkNames: { [key: string]: string } = {
+      '0x1': 'Ethereum Mainnet',
+      '0x3': 'Ropsten Testnet',
+      '0x4': 'Rinkeby Testnet',
+      '0x5': 'Goerli Testnet',
+      '0x89': 'Polygon Mainnet',
+      '0x13881': 'Polygon Mumbai',
+      '0xa': 'Optimism',
+      '0xa4b1': 'Arbitrum One',
+      '0x1a16': 'Custom Network',
+    };
+    
+    return networkNames[chainId || ''] || `Chain ${chainId}`;
   };
 
   return (
@@ -164,22 +180,20 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
         </div>
       </div>
 
-      {/* Network Info */}
-      <Card className={`${isOnCitreaNetwork() ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+      {/* Network Info - Now shows any network as supported */}
+      <Card className="bg-blue-50 border-blue-200">
         <CardContent className="py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium mb-1 ${isOnCitreaNetwork() ? 'text-green-900' : 'text-red-900'}`}>
-                {isOnCitreaNetwork() ? 'Connected to Citrea Testnet' : 'Wrong Network'}
+              <h4 className="font-medium mb-1 text-blue-900">
+                Connected to {getCurrentNetworkName()}
               </h4>
-              <p className={`text-sm ${isOnCitreaNetwork() ? 'text-green-700' : 'text-red-700'}`}>
-                {isOnCitreaNetwork() 
-                  ? 'Ready to claim tokens' 
-                  : 'Please switch to Citrea Testnet'}
+              <p className="text-sm text-blue-700">
+                Token claiming is available on all networks
               </p>
             </div>
             <div className="text-right">
-              <div className={`text-sm ${isOnCitreaNetwork() ? 'text-green-600' : 'text-red-600'}`}>
+              <div className="text-sm text-blue-600">
                 Chain ID
               </div>
               <div className="font-mono text-sm">{chainId || 'Not connected'}</div>
@@ -280,7 +294,7 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
             </Card>
           )}
 
-          {/* Important Notes */}
+          {/* Important Notes - Updated to reflect multi-network support */}
           <Card className="bg-amber-50 border-amber-200">
             <CardContent className="py-4">
               <div className="flex items-start">
@@ -288,10 +302,10 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
                 <div>
                   <div className="font-medium text-amber-800 mb-1">Important Notes</div>
                   <ul className="text-sm text-amber-700 space-y-1">
-                    <li>• Ensure you have enough cBTC for gas fees</li>
+                    <li>• Ensure you have enough native tokens for gas fees</li>
                     <li>• Tokens will be sent to your connected wallet address</li>
                     <li>• This action cannot be undone once confirmed</li>
-                    <li>• Contract is deployed on Citrea Testnet</li>
+                    <li>• Available on all supported networks</li>
                     <li>• You may only claim once per day (if applicable)</li>
                   </ul>
                 </div>
@@ -299,10 +313,10 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
             </CardContent>
           </Card>
 
-          {/* Claim Button */}
+          {/* Claim Button - Removed network restriction */}
           <Button 
             onClick={handleClaimTokens}
-            disabled={availablePoints === 0 || isLoading || !isConnected || claimStatus === 'success' || !isOnCitreaNetwork()}
+            disabled={availablePoints === 0 || isLoading || !isConnected || claimStatus === 'success'}
             className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-lg py-3"
           >
             {isLoading ? (
@@ -317,8 +331,6 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
               </>
             ) : availablePoints === 0 ? (
               'No Tokens to Claim'
-            ) : !isOnCitreaNetwork() ? (
-              'Switch to Citrea Testnet'
             ) : (
               <>
                 <Coins className="w-5 h-5 mr-2" />
@@ -330,7 +342,7 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
           {/* Gas Estimation */}
           {availablePoints > 0 && claimStatus === 'idle' && gasEstimate && (
             <div className="text-center text-sm text-gray-600">
-              Estimated gas cost: ~{gasEstimate} cBTC
+              Estimated gas cost: ~{gasEstimate} native tokens
             </div>
           )}
         </CardContent>
