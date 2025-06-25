@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Wallet, LogOut } from 'lucide-react';
+import { Wallet, LogOut, Plus, RefreshCw } from 'lucide-react';
+import { useWallet } from '@/hooks/useWallet';
 
 interface WalletConnectionProps {
   isConnected: boolean;
@@ -16,6 +17,8 @@ export const WalletConnection: React.FC<WalletConnectionProps> = ({
   onConnect,
   onDisconnect,
 }) => {
+  const { isOnCitreaNetwork, addCitreaNetwork, switchToCitreaNetwork } = useWallet();
+
   if (!isConnected) {
     return (
       <Button onClick={onConnect} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
@@ -33,6 +36,30 @@ export const WalletConnection: React.FC<WalletConnectionProps> = ({
           {account?.slice(0, 6)}...{account?.slice(-4)}
         </span>
       </div>
+      
+      {!isOnCitreaNetwork() && (
+        <div className="flex items-center space-x-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={switchToCitreaNetwork}
+            className="hover:bg-orange-50 hover:border-orange-200 hover:text-orange-700"
+          >
+            <RefreshCw className="w-4 h-4 mr-1" />
+            Switch Network
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={addCitreaNetwork}
+            className="hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700"
+          >
+            <Plus className="w-4 h-4 mr-1" />
+            Add Network
+          </Button>
+        </div>
+      )}
+      
       <Button 
         variant="outline" 
         size="sm" 
