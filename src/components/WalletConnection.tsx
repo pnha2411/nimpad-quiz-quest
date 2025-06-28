@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Wallet, LogOut, Plus, RefreshCw } from 'lucide-react';
-import { useWallet } from '@/hooks/useWallet';
+import { infoWallet } from '@/hooks/useWallet';
 
 interface WalletConnectionProps {
   isConnected: boolean;
@@ -17,7 +17,7 @@ export const WalletConnection: React.FC<WalletConnectionProps> = ({
   onConnect,
   onDisconnect,
 }) => {
-  const { isOnCitreaNetwork, addCitreaNetwork, switchToCitreaNetwork, refreshNetworkInfo, chainId, CITREA_TESTNET } = useWallet();
+  const { isOnCitreaNetwork, addCitreaNetwork, switchToCitreaNetwork, refreshNetworkInfo, chainId, CITREA_TESTNET } = infoWallet();
 
   const handleRefreshNetwork = async () => {
     await refreshNetworkInfo();

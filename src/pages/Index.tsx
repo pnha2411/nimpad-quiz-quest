@@ -7,14 +7,14 @@ import { TokenClaiming } from '@/components/TokenClaiming';
 import { AIChatbot } from '@/components/AIChatbot';
 import { NFTBadges } from '@/components/NFTBadges';
 import { Navigation } from '@/components/Navigation';
-import { useWallet } from '@/hooks/useWallet';
+import { infoWallet } from '@/hooks/useWallet';
 import { useQuiz } from '@/hooks/useQuiz';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges'>('dashboard');
   
   // Always call hooks in the same order
-  const { isConnected, account, connectWallet, disconnectWallet, isOnCitreaNetwork } = useWallet();
+  const { isConnected, account, connectWallet, disconnectWallet, isOnCitreaNetwork } = infoWallet();
   const { currentPoints, totalQuizzes, completedQuizzes } = useQuiz();
 
   // Redirect to dashboard when wallet is successfully connected
@@ -79,12 +79,7 @@ const Index = () => {
                   🏆 Mint NFT badges to showcase your achievements<br/>
                   💰 Claim tokens through on-chain transactions
                 </p>
-              </div>
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-                <p className="text-sm text-amber-800">
-                  <strong>Important:</strong> Make sure you're connected to Citrea Testnet (Chain ID: 0x5ffd4c) to use all features.
-                </p>
-              </div>
+              </div>             
             </div>
           </div>
         ) : (
@@ -117,7 +112,7 @@ const Index = () => {
               
               {currentView === 'claim' && (
                 <TokenClaiming 
-                  availablePoints={currentPoints}
+                  availablePoints={30}
                   onBack={() => setCurrentView('dashboard')}
                 />
               )}

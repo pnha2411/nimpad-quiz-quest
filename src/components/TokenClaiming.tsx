@@ -1,11 +1,12 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Coins, AlertTriangle, CheckCircle, ExternalLink } from 'lucide-react';
-import { useWallet } from '@/hooks/useWallet';
+import { infoWallet } from '@/hooks/useWallet';
+import { useWallet } from '@/hooks/WalletContext';
 import { toast } from '@/hooks/use-toast';
 import { ethers } from 'ethers';
+import detectEthereumProvider from '@metamask/detect-provider';
 
 interface TokenClaimingProps {
   availablePoints: number;
@@ -15,12 +16,12 @@ interface TokenClaimingProps {
 // Citrea contract addresses - replace with actual deployed contracts
 const CITREA_CONTRACTS = {
   POINTS_TRACKER: "0x1234567890123456789012345678901234567890", // Replace with actual points contract
-  TOKEN_CLAIM: "0x0987654321098765432109876543210987654321",    // Replace with actual Citrea token contract
+  TOKEN_CLAIM: "0xA1F002bf7cAD148a639418D77b93912871901875",    // Replace with actual Citrea token contract
 };
 
 // Example ABI for token claiming - replace with actual contract ABI
 const TOKEN_CLAIM_ABI = [
-  "function claimTokens(uint256 points) external",
+  "function mint(address to, uint256 amount) external",
   "function getClaimableAmount(address user) external view returns (uint256)",
   "function hasClaimedToday(address user) external view returns (bool)",
   "event TokensClaimed(address indexed user, uint256 amount)"
@@ -30,14 +31,17 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
   availablePoints,
   onBack,
 }) => {
-  const { isConnected, account, signer, chainId, isOnCitreaNetwork, CITREA_TESTNET } = useWallet();
+  const { isConnected, account, chainId, isOnCitreaNetwork, CITREA_TESTNET } = infoWallet();
+  const { signer } = useWallet();
   const [isLoading, setIsLoading] = useState(false);
   const [claimStatus, setClaimStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle');
   const [txHash, setTxHash] = useState<string>('');
   const [gasEstimate, setGasEstimate] = useState<string>('');
+  availablePoints = 30;
 
   const handleClaimTokens = async () => {
-    if (!isConnected || !signer || availablePoints === 0) {
+    console.log("signer to claim:", signer);
+    if (availablePoints === 0) {
       toast({
         title: "Cannot claim tokens",
         description: "Please ensure your wallet is connected and you have points to claim.",
@@ -50,16 +54,14 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
     setClaimStatus('pending');
 
     try {
-      console.log('Initiating token claim...');
-      console.log('Available points:', availablePoints);
-      console.log('User account:', account);
-      console.log('Chain ID:', chainId);
-
       // Create contract instance with actual ABI and address
+      const provider = await detectEthereumProvider();
+      const ethersProvider = new ethers.BrowserProvider(provider as any);
+      const signer_wallet = await ethersProvider.getSigner();
       const contract = new ethers.Contract(
         CITREA_CONTRACTS.TOKEN_CLAIM,
         TOKEN_CLAIM_ABI,
-        signer
+        signer_wallet
       );
 
       // Check if user has already claimed today (if contract has this restriction)
@@ -81,8 +83,11 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
 
       // Execute the claim transaction
       console.log('Calling claimTokens function...');
-      const tx = await contract.claimTokens(availablePoints, {
-        gasLimit: 300000, // Set appropriate gas limit
+      const accounts = await (provider as any).request({ 
+        method: 'eth_requestAccounts' 
+      });
+      const tx = await contract.mint(accounts[0], availablePoints, {
+        gasLimit: 300000,
       });
 
       setTxHash(tx.hash);
@@ -162,6 +167,7 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
       '0xa': 'Optimism',
       '0xa4b1': 'Arbitrum One',
       '0x1a16': 'Custom Network',
+      '0x13fb': 'Citrea Testnet',
     };
     
     return networkNames[chainId || ''] || `Chain ${chainId}`;
@@ -178,29 +184,7 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
         <div className="text-sm text-gray-600">
           Token Claiming Portal
         </div>
-      </div>
-
-      {/* Network Info - Now shows any network as supported */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h4 className="font-medium mb-1 text-blue-900">
-                Connected to {getCurrentNetworkName()}
-              </h4>
-              <p className="text-sm text-blue-700">
-                Token claiming is available on all networks
-              </p>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-blue-600">
-                Chain ID
-              </div>
-              <div className="font-mono text-sm">{chainId || 'Not connected'}</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      </div>         
 
       {/* Claim Interface */}
       <Card className="shadow-lg">
@@ -316,7 +300,6 @@ export const TokenClaiming: React.FC<TokenClaimingProps> = ({
           {/* Claim Button - Removed network restriction */}
           <Button 
             onClick={handleClaimTokens}
-            disabled={availablePoints === 0 || isLoading || !isConnected || claimStatus === 'success'}
             className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-lg py-3"
           >
             {isLoading ? (

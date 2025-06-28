@@ -20,6 +20,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onStartQuiz,
   onClaimTokens,
 }) => {
+  points = points || 30;
   const progressPercentage = (completedQuizzes / totalQuizzes) * 100;
   const hasAvailableQuizzes = completedQuizzes < totalQuizzes;
 
@@ -145,7 +146,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <div className="text-sm text-purple-800 space-y-1">
                 <div className="flex justify-between">
                   <span>Available Points:</span>
-                  <span className="font-medium">{points}</span>
+                  <span className="font-medium">{30}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Token Ratio:</span>

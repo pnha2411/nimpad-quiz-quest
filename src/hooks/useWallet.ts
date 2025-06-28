@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import detectEthereumProvider from '@metamask/detect-provider';
@@ -21,7 +20,7 @@ interface WalletState {
 
 // Citrea testnet configuration - from https://docs.citrea.xyz/developer-documentation/chain-information
 const CITREA_TESTNET = {
-  CHAIN_ID: '0x5ffd4c', // 6289484 in decimal
+  CHAIN_ID: '0x13fb',
   CHAIN_NAME: 'Citrea Testnet',
   RPC_URLS: ['https://rpc.testnet.citrea.xyz'],
   NATIVE_CURRENCY: {
@@ -32,7 +31,7 @@ const CITREA_TESTNET = {
   BLOCK_EXPLORER_URLS: ['https://explorer.testnet.citrea.xyz']
 };
 
-export const useWallet = () => {
+export const infoWallet = () => {
   const [walletState, setWalletState] = useState<WalletState>({
     isConnected: false,
     account: null,
@@ -84,12 +83,28 @@ export const useWallet = () => {
 
       const ethersProvider = new ethers.BrowserProvider(provider as any);
       const signer = await ethersProvider.getSigner();
+      console.log("signer from connect:", signer);
       
       // Get current chain ID directly from wallet
       const chainId = await getCurrentChainId();
 
+      if (!chainId) {
+        toast({
+          title: "Failed to detect network",
+          description: "Could not determine the connected network. Please try again.",
+          variant: "destructive",
+        });
+        setWalletState({
+          isConnected: false,
+          account: null,
+          provider: null,
+          signer: null,
+          chainId: null,
+        });
+        return;
+      }
+
       console.log('Connected to chain:', chainId);
-      console.log('Citrea testnet chain ID:', CITREA_TESTNET.CHAIN_ID);
 
       setWalletState({
         isConnected: true,
@@ -99,22 +114,10 @@ export const useWallet = () => {
         chainId,
       });
 
-      // Store connection state
-      localStorage.setItem('walletConnected', 'true');
-
-      // Check if we're on the correct network and inform user
-      if (chainId !== CITREA_TESTNET.CHAIN_ID) {
-        toast({
-          title: "Wrong network detected",
-          description: "Please switch to Citrea Testnet to access all features",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Wallet connected successfully",
-          description: `Connected to ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)} on Citrea Testnet`,
-        });
-      }
+      toast({
+        title: "Wallet connected successfully",
+        description: `Connected to ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)} on chain ${chainId}`,
+      });
 
       console.log('Wallet connected:', accounts[0]);
 
@@ -136,7 +139,7 @@ export const useWallet = () => {
       signer: null,
       chainId: null,
     });
-    localStorage.removeItem('walletConnected');
+    // No longer remove 'walletConnected' from localStorage
     
     toast({
       title: "Wallet disconnected",
@@ -211,6 +214,7 @@ export const useWallet = () => {
   };
 
   const isOnCitreaNetwork = () => {
+    console.log('Checking if on Citrea network:', walletState.chainId);
     return walletState.chainId === CITREA_TESTNET.CHAIN_ID;
   };
 
@@ -228,10 +232,8 @@ export const useWallet = () => {
 
   // Auto-connect if previously connected
   useEffect(() => {
-    const wasConnected = localStorage.getItem('walletConnected');
-    if (wasConnected === 'true') {
-      connectWallet();
-    }
+    // No longer auto-connect based on localStorage
+    // Optionally, you can remove this effect entirely if not needed
   }, []);
 
   // Listen for account changes
@@ -250,26 +252,14 @@ export const useWallet = () => {
 
       const handleChainChanged = async (chainId: string) => {
         console.log('Chain changed to:', chainId);
-        
-        // Update the state immediately with the new chain ID
         setWalletState(prev => ({
           ...prev,
           chainId,
         }));
-        
-        // Show notification about network change
-        if (chainId === CITREA_TESTNET.CHAIN_ID) {
-          toast({
-            title: "Network switched",
-            description: "Successfully connected to Citrea Testnet",
-          });
-        } else {
-          toast({
-            title: "Wrong network",
-            description: "Please switch to Citrea Testnet to access all features",
-            variant: "destructive",
-          });
-        }
+        toast({
+          title: "Network switched",
+          description: `Connected to chain ${chainId}`,
+        });
       };
 
       window.ethereum.on('accountsChanged', handleAccountsChanged);

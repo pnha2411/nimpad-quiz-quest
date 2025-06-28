@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Award, CheckCircle, ExternalLink, Coins } from 'lucide-react';
-import { useWallet } from '@/hooks/useWallet';
+import { infoWallet } from '@/hooks/useWallet';
 import { toast } from '@/hooks/use-toast';
 import { ethers } from 'ethers';
 
@@ -76,7 +76,7 @@ export const NFTBadges: React.FC<NFTBadgesProps> = ({
   completedQuizzes,
   onBack,
 }) => {
-  const { isConnected, account, signer, chainId } = useWallet();
+  const { isConnected, account, signer, chainId } = infoWallet();
   const [badges, setBadges] = useState<NFTBadge[]>(BADGE_TEMPLATES);
   const [mintingBadge, setMintingBadge] = useState<number | null>(null);
   const [ownedBadges, setOwnedBadges] = useState<number[]>([]);
