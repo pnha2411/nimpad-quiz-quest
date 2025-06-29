@@ -1,8 +1,49 @@
-# Welcome to your Lovable project
+# Nimpad
 
-## Project info
+Nimpad is an **on‑chain, token‑gated learning platform** built atop the [Citrea](https://citrea.xyz) ecosystem. It enables users to learn about Citrea, Bitcoin Layer 2, DeFi, and BtcFi through interactive quizzes, AI chat, and NFT badge achievements. All progress, rewards, and claims are managed on-chain, leveraging Citrea's EVM compatibility and security.
+
+---
+
+## Project Info
 
 **URL**: https://lovable.dev/projects/b8389a57-f29e-4fc0-836d-66c86f89cc70
+
+---
+
+## Features
+
+- **Token-Gated Learning:** Access quizzes and content by connecting your wallet.
+- **On-Chain Rewards:** Earn points and claim tokens on any supported EVM network.
+- **NFT Badges:** Mint achievement badges as NFTs to showcase your progress.
+- **AI Chatbot:** Get instant answers about Citrea, DeFi, and Bitcoin Layer 2.
+- **Citrea Ecosystem:** Built to demonstrate and leverage Citrea's ZK rollup and EVM compatibility.
+
+---
+
+## Repository Structure
+
+```
+.
+├── public/                     # Static assets (favicon, robots.txt, etc.)
+├── src/
+│   ├── App.tsx                 # Main React app entry
+│   ├── main.tsx                # Vite entry point
+│   ├── components/             # UI components (TokenClaiming, NFTBadges, AIChatbot, etc.)
+│   ├── hooks/                  # Custom React hooks (wallet, quiz, etc.)
+│   ├── integrations/
+│   │   └── supabase/           # Supabase integration (client, types)
+│   ├── lib/                    # Utility libraries and helpers
+│   ├── pages/                  # Page-level components (Index, etc.)
+│   └── ...                     # Styles, types, etc.
+├── supabase/                   # Supabase config
+├── package.json                # Project dependencies and scripts
+├── tsconfig*.json              # TypeScript configuration
+├── tailwind.config.ts          # Tailwind CSS config
+├── vite.config.ts              # Vite config
+└── README.md                   # Project documentation (this file)
+```
+
+---
 
 ## How can I edit this code?
 
@@ -50,6 +91,8 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
+---
+
 ## What technologies are used for this project?
 
 This project is built with:
@@ -60,9 +103,13 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+---
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/b8389a57-f29e-4fc0-836d-66c86f89cc70) and click on Share -> Publish.
+
+---
 
 ## Can I connect a custom domain to my Lovable project?
 
