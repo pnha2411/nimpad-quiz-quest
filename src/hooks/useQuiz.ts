@@ -180,6 +180,7 @@ export const useQuiz = () => {
       completedQuizzes: [...quizState.completedQuizzes, quizId],
     };
 
+    // Update state immediately for real-time feedback
     setQuizState(newState);
 
     // Save to database if user is authenticated

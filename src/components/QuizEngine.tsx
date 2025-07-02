@@ -13,12 +13,12 @@ interface QuizEngineProps {
 }
 
 export const QuizEngine: React.FC<QuizEngineProps> = ({ onComplete, onBack }) => {
-  const { getAvailableQuizzes, completeQuiz } = useQuiz();
+  const { getAvailableQuizzes, completeQuiz, currentPoints } = useQuiz();
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [totalPoints, setTotalPoints] = useState(0);
+  const [sessionPoints, setSessionPoints] = useState(0);
 
   const availableQuizzes = getAvailableQuizzes();
   const currentQuiz = availableQuizzes[currentQuizIndex];
@@ -85,8 +85,10 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({ onComplete, onBack }) =>
     setShowResult(true);
 
     if (selectedAnswer === currentQuiz.correctAnswer) {
-      setTotalPoints(prev => prev + currentQuiz.points);
-      completeQuiz(currentQuiz.id, currentQuiz.points);
+      const newPoints = currentQuiz.points;
+      setSessionPoints(prev => prev + newPoints);
+      // Update global score immediately
+      completeQuiz(currentQuiz.id, newPoints);
     }
   };
 
@@ -103,7 +105,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({ onComplete, onBack }) =>
   const handleFinishQuiz = () => {
     toast({
       title: "Quiz session completed!",
-      description: `You earned a total of ${totalPoints} points this session.`,
+      description: `You earned a total of ${sessionPoints} points this session.`,
     });
     onComplete();
   };
@@ -119,21 +121,22 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({ onComplete, onBack }) =>
           </p>
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
             <div className="text-sm text-green-700 mb-1">Points Earned This Session</div>
-            <div className="text-3xl font-bold text-green-800">{totalPoints}</div>
+            <div className="text-3xl font-bold text-green-800">{sessionPoints}</div>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button onClick={handleFinishQuiz} className="bg-gradient-to-r from-green-600 to-blue-600">
               Back to Dashboard
             </Button>
             {availableQuizzes.length > currentQuizIndex + 1 && (
-              <Button variant="outline" onClick={() => {
-                setCurrentQuizIndex(prev => prev + 1);
-                setSelectedAnswer(null);
-                setShowResult(false);
-                setQuizCompleted(false);
-              }}>
-                Continue with Next Quiz
-              </Button>
+               <Button variant="outline" onClick={() => {
+                 setCurrentQuizIndex(prev => prev + 1);
+                 setSelectedAnswer(null);
+                 setShowResult(false);
+                 setQuizCompleted(false);
+                 setSessionPoints(0); // Reset session points for new quiz session
+               }}>
+                 Continue with Next Quiz
+               </Button>
             )}
           </div>
         </CardContent>
