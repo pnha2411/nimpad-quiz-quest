@@ -25,63 +25,221 @@ const Index = () => {
   }, [isConnected, account]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">N</span>
+              <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center animate-float">
+                <span className="text-primary-foreground font-bold text-sm">N</span>
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 Nimpad
               </h1>
-              <span className="text-sm text-gray-500 hidden sm:inline">Learn to Earn on Citrea</span>
+              <span className="text-sm text-muted-foreground hidden sm:inline">Learn to Earn on Citrea</span>
             </div>
             <div className="flex items-center space-x-4">
-              {isConnected && !isOnCitreaNetwork() && (
-                <div className="text-sm text-red-600 bg-red-50 px-3 py-1 rounded-full">
-                  Wrong Network
-                </div>
+              {isConnected && (
+                <WalletConnection 
+                  isConnected={isConnected}
+                  account={account}
+                  onConnect={connectWallet}
+                  onDisconnect={disconnectWallet}
+                />
               )}
-              <WalletConnection 
-                isConnected={isConnected}
-                account={account}
-                onConnect={connectWallet}
-                onDisconnect={disconnectWallet}
-              />
+              {!isConnected && (
+                <WalletConnection 
+                  isConnected={isConnected}
+                  account={account}
+                  onConnect={connectWallet}
+                  onDisconnect={disconnectWallet}
+                />
+              )}
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main>
         {!isConnected ? (
-          <div className="text-center py-20">
-            <div className="max-w-md mx-auto">
-              <div className="w-24 h-24 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">N</span>
+          <>
+            {/* Hero Section */}
+            <section className="relative overflow-hidden py-20 lg:py-32">
+              <div className="absolute inset-0 hero-gradient opacity-20"></div>
+              <div className="container mx-auto px-4 text-center relative z-10">
+                <div className="animate-fade-up">
+                  <h1 className="text-5xl lg:text-7xl font-bold mb-6 glow-text">
+                    Learn Web3 by
+                    <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"> Doing</span>
+                  </h1>
+                  <p className="text-xl lg:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+                    Complete Quests • Earn Tokens • Build Your Identity
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                    <button 
+                      onClick={connectWallet}
+                      className="bg-primary text-primary-foreground px-8 py-4 rounded-lg text-lg font-semibold animate-glow hover:scale-105 transition-transform"
+                    >
+                      Get Started
+                    </button>
+                    <button 
+                      onClick={connectWallet}
+                      className="border border-primary text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary/10 transition-colors"
+                    >
+                      Open App
+                    </button>
+                  </div>
+                  
+                  {/* Progress indicator */}
+                  <div className="inline-flex items-center bg-card/50 backdrop-blur px-6 py-3 rounded-full border border-border">
+                    <div className="w-2 h-2 bg-primary rounded-full mr-3 animate-pulse"></div>
+                    <span className="text-sm text-muted-foreground">Quest 1 of 36 • Ready to Begin</span>
+                  </div>
                 </div>
               </div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Welcome to Nimpad</h2>
-              <p className="text-gray-600 mb-8">
-                Learn about Citrea's Bitcoin Layer 2 technology and earn tokens for your knowledge. 
-                Connect your MetaMask wallet to get started.
-              </p>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <p className="text-sm text-blue-800">
-                  📚 Complete quizzes based on Citrea documentation<br/>
-                  🤖 Ask our AI assistant about DeFi and BtcFi<br/>
-                  🎯 Earn points for correct answers<br/>
-                  🏆 Mint NFT badges to showcase your achievements<br/>
-                  💰 Claim tokens through on-chain transactions
-                </p>
-              </div>             
-            </div>
-          </div>
+            </section>
+
+            {/* Feature Highlights */}
+            <section className="py-20 bg-card/20">
+              <div className="container mx-auto px-4">
+                <h2 className="text-3xl lg:text-4xl font-bold text-center mb-16 animate-fade-up">
+                  Why Choose <span className="text-primary">Nimpad</span>?
+                </h2>
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {[
+                    {
+                      icon: "🔗",
+                      title: "Cross-Chain Learning",
+                      description: "Master Bitcoin Layer 2 and DeFi protocols across multiple networks"
+                    },
+                    {
+                      icon: "🏆",
+                      title: "Leaderboards & Streaks",
+                      description: "Compete with peers and maintain learning streaks for bonus rewards"
+                    },
+                    {
+                      icon: "🎯",
+                      title: "Unified Identity",
+                      description: "Build your Web3 reputation with wallet-based achievements"
+                    },
+                    {
+                      icon: "💎",
+                      title: "Exclusive Campaigns",
+                      description: "Access partner quests and premium NFT collections"
+                    }
+                  ].map((feature, index) => (
+                    <div 
+                      key={index}
+                      className="feature-card bg-card border border-border rounded-xl p-6 text-center animate-fade-up"
+                      style={{ animationDelay: `${index * 0.2}s` }}
+                    >
+                      <div className="text-4xl mb-4">{feature.icon}</div>
+                      <h3 className="text-xl font-semibold mb-3 text-primary">{feature.title}</h3>
+                      <p className="text-muted-foreground">{feature.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* How It Works */}
+            <section className="py-20">
+              <div className="container mx-auto px-4">
+                <h2 className="text-3xl lg:text-4xl font-bold text-center mb-16 animate-fade-up">
+                  How It <span className="text-secondary">Works</span>
+                </h2>
+                <div className="grid md:grid-cols-3 gap-12 max-w-4xl mx-auto">
+                  {[
+                    {
+                      step: "01",
+                      title: "Connect Wallet",
+                      description: "Link your MetaMask wallet to start your learning journey",
+                      icon: "🔗"
+                    },
+                    {
+                      step: "02", 
+                      title: "Pick Quest",
+                      description: "Choose from quizzes, AI chats, and interactive challenges",
+                      icon: "🎯"
+                    },
+                    {
+                      step: "03",
+                      title: "Earn & Level Up",
+                      description: "Gain points, claim tokens, and mint achievement NFTs",
+                      icon: "🚀"
+                    }
+                  ].map((step, index) => (
+                    <div key={index} className="text-center animate-fade-up" style={{ animationDelay: `${index * 0.3}s` }}>
+                      <div className="relative mb-6">
+                        <div className="w-20 h-20 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto text-2xl animate-float" style={{ animationDelay: `${index * 0.5}s` }}>
+                          {step.icon}
+                        </div>
+                        <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-sm font-bold px-2 py-1 rounded-full">
+                          {step.step}
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
+                      <p className="text-muted-foreground">{step.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Credibility Section */}
+            <section className="py-20 bg-card/20">
+              <div className="container mx-auto px-4 text-center">
+                <h2 className="text-2xl font-semibold mb-8 animate-fade-up">Trusted by the Web3 Community</h2>
+                <div className="flex flex-wrap justify-center items-center gap-8 mb-8">
+                  {['Citrea', 'Bitcoin L2', 'DeFi', 'BtcFi', 'EVM'].map((tech, index) => (
+                    <div 
+                      key={index}
+                      className="bg-card border border-border px-6 py-3 rounded-lg text-muted-foreground font-medium animate-fade-up"
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                      {tech}
+                    </div>
+                  ))}
+                </div>
+                <div className="grid md:grid-cols-3 gap-8 max-w-2xl mx-auto">
+                  <div className="animate-fade-up">
+                    <div className="text-3xl font-bold text-primary">1,000+</div>
+                    <div className="text-muted-foreground">Active Learners</div>
+                  </div>
+                  <div className="animate-fade-up" style={{ animationDelay: '0.2s' }}>
+                    <div className="text-3xl font-bold text-secondary">50+</div>
+                    <div className="text-muted-foreground">Quests Available</div>
+                  </div>
+                  <div className="animate-fade-up" style={{ animationDelay: '0.4s' }}>
+                    <div className="text-3xl font-bold text-primary">10,000+</div>
+                    <div className="text-muted-foreground">Tokens Earned</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Final CTA */}
+            <section className="py-20">
+              <div className="container mx-auto px-4 text-center">
+                <div className="max-w-2xl mx-auto animate-fade-up">
+                  <h2 className="text-3xl lg:text-4xl font-bold mb-6">
+                    Ready to Start Your <span className="text-primary">Web3 Journey</span>?
+                  </h2>
+                  <p className="text-xl text-muted-foreground mb-8">
+                    Join thousands of learners earning while they explore the future of finance.
+                  </p>
+                  <button 
+                    onClick={connectWallet}
+                    className="bg-primary text-primary-foreground px-12 py-4 rounded-lg text-xl font-semibold animate-glow hover:scale-105 transition-transform"
+                  >
+                    Connect Wallet & Start Learning
+                  </button>
+                </div>
+              </div>
+            </section>
+          </>
         ) : (
           <>
             <Navigation 
@@ -136,19 +294,48 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t bg-white/50 backdrop-blur-sm mt-20">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
+      <footer className="border-t border-border bg-card/50 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-12">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-6 h-6 bg-gradient-to-r from-primary to-secondary rounded flex items-center justify-center">
+                  <span className="text-primary-foreground font-bold text-xs">N</span>
+                </div>
+                <span className="font-bold text-lg">Nimpad</span>
+              </div>
+              <p className="text-muted-foreground text-sm">
+                The ultimate learn-to-earn platform for Web3 education.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Learn</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-primary transition-colors">Quests</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">AI Chat</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Documentation</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Earn</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-primary transition-colors">Tokens</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">NFT Badges</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Leaderboard</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Community</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="https://docs.citrea.xyz/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Citrea Docs</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Discord</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Twitter</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
             <div className="flex items-center space-x-4 mb-4 md:mb-0">
-              <span>Built on Citrea</span>
-              <a 
-                href="https://docs.citrea.xyz/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800 transition-colors"
-              >
-                Documentation
-              </a>
+              <span>Built on Citrea Bitcoin Layer 2</span>
             </div>
             <div className="text-center md:text-right">
               <p>Learn • Ask • Earn • Collect</p>

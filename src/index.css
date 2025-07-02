@@ -6,35 +6,42 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Dark futuristic theme */
+    --background: 222 15% 5%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 225 15% 8%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 225 15% 8%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 158 100% 50%;
+    --primary-foreground: 222 15% 5%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 207 100% 50%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 225 15% 12%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 225 15% 12%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 225 15% 15%;
+    --input: 225 15% 15%;
+    --ring: 158 100% 50%;
 
     --radius: 0.5rem;
+
+    /* Custom variables for landing page */
+    --accent-glow: 158 100% 50%;
+    --accent-secondary: 207 100% 50%;
+    --soft-glow: 158 100% 50% / 0.4;
+    --card-glow: 158 100% 50% / 0.2;
 
     --sidebar-background: 0 0% 98%;
 
@@ -99,5 +106,66 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Landing page animations */
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 20px hsl(var(--soft-glow));
+    }
+    to {
+      box-shadow: 0 0 30px hsl(var(--soft-glow)), 0 0 40px hsl(var(--soft-glow));
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.6s ease-out;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .hero-gradient {
+    background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--accent)));
+  }
+
+  .glow-text {
+    text-shadow: 0 0 10px hsl(var(--soft-glow));
+  }
+
+  .feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px hsl(var(--card-glow));
   }
 }
