@@ -37,7 +37,7 @@ const Index = () => {
               <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 Nimpad
               </h1>
-              <span className="text-sm text-muted-foreground hidden sm:inline">Learn to Earn on Citrea</span>
+              <span className="text-sm text-muted-foreground hidden sm:inline">Learn to Earn for BTC Builders</span>
             </div>
             <div className="flex items-center space-x-4">
               {isConnected && (
@@ -71,11 +71,11 @@ const Index = () => {
               <div className="container mx-auto px-4 text-center relative z-10">
                 <div className="animate-fade-up">
                   <h1 className="text-5xl lg:text-7xl font-bold mb-6 glow-text">
-                    Learn Web3 by
-                    <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"> Doing</span>
+                    Build Bitcoin's
+                    <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"> Future</span>
                   </h1>
                   <p className="text-xl lg:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-                    Complete Quests • Earn Tokens • Build Your Identity
+                    Master Bitcoin Layer 2 • Build dApps • Earn While Learning
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                     <button 
@@ -110,24 +110,24 @@ const Index = () => {
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                   {[
                     {
-                      icon: "🔗",
-                      title: "Cross-Chain Learning",
-                      description: "Master Bitcoin Layer 2 and DeFi protocols across multiple networks"
+                      icon: "₿",
+                      title: "Bitcoin L2 Mastery",
+                      description: "Deep dive into Bitcoin Layer 2 solutions, scaling, and infrastructure"
                     },
                     {
-                      icon: "🏆",
-                      title: "Leaderboards & Streaks",
-                      description: "Compete with peers and maintain learning streaks for bonus rewards"
+                      icon: "🔧",
+                      title: "Build & Deploy",
+                      description: "Create real dApps on Bitcoin L2 networks with hands-on tutorials"
                     },
                     {
                       icon: "🎯",
-                      title: "Unified Identity",
-                      description: "Build your Web3 reputation with wallet-based achievements"
+                      title: "Developer Rewards",
+                      description: "Earn tokens and NFTs as you progress through development milestones"
                     },
                     {
-                      icon: "💎",
-                      title: "Exclusive Campaigns",
-                      description: "Access partner quests and premium NFT collections"
+                      icon: "🌐",
+                      title: "Multi-Chain Support",
+                      description: "Learn across Bitcoin L2s including Citrea, Lightning, and more"
                     }
                   ].map((feature, index) => (
                     <div 
@@ -191,9 +191,9 @@ const Index = () => {
             {/* Credibility Section */}
             <section className="py-20 bg-card/20">
               <div className="container mx-auto px-4 text-center">
-                <h2 className="text-2xl font-semibold mb-8 animate-fade-up">Trusted by the Web3 Community</h2>
+                <h2 className="text-2xl font-semibold mb-8 animate-fade-up">Trusted by Bitcoin Builders</h2>
                 <div className="flex flex-wrap justify-center items-center gap-8 mb-8">
-                  {['Citrea', 'Bitcoin L2', 'DeFi', 'BtcFi', 'EVM'].map((tech, index) => (
+                  {['Lightning Network', 'Stacks', 'Rootstock', 'Citrea', 'Liquid'].map((tech, index) => (
                     <div 
                       key={index}
                       className="bg-card border border-border px-6 py-3 rounded-lg text-muted-foreground font-medium animate-fade-up"
@@ -225,16 +225,16 @@ const Index = () => {
               <div className="container mx-auto px-4 text-center">
                 <div className="max-w-2xl mx-auto animate-fade-up">
                   <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-                    Ready to Start Your <span className="text-primary">Web3 Journey</span>?
+                    Ready to Start Building on <span className="text-primary">Bitcoin</span>?
                   </h2>
                   <p className="text-xl text-muted-foreground mb-8">
-                    Join thousands of learners earning while they explore the future of finance.
+                    Join thousands of developers mastering Bitcoin Layer 2 technologies.
                   </p>
                   <button 
                     onClick={connectWallet}
                     className="bg-primary text-primary-foreground px-12 py-4 rounded-lg text-xl font-semibold animate-glow hover:scale-105 transition-transform"
                   >
-                    Connect Wallet & Start Learning
+                    Connect Wallet & Start Building
                   </button>
                 </div>
               </div>
@@ -305,7 +305,7 @@ const Index = () => {
                 <span className="font-bold text-lg">Nimpad</span>
               </div>
               <p className="text-muted-foreground text-sm">
-                The ultimate learn-to-earn platform for Web3 education.
+                The ultimate learn-to-earn platform for Bitcoin builders and developers.
               </p>
             </div>
             <div>
@@ -335,10 +335,10 @@ const Index = () => {
           </div>
           <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
             <div className="flex items-center space-x-4 mb-4 md:mb-0">
-              <span>Built on Citrea Bitcoin Layer 2</span>
+              <span>Built for Bitcoin Layer 2 Ecosystem</span>
             </div>
             <div className="text-center md:text-right">
-              <p>Learn • Ask • Earn • Collect</p>
+              <p>Build • Learn • Earn • Scale</p>
             </div>
           </div>
         </div>
