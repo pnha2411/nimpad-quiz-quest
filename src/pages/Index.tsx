@@ -7,11 +7,13 @@ import { TokenClaiming } from '@/components/TokenClaiming';
 import { AIChatbot } from '@/components/AIChatbot';
 import { NFTBadges } from '@/components/NFTBadges';
 import { Navigation } from '@/components/Navigation';
+import { PortfolioBuilder } from '@/components/PortfolioBuilder';
+import { RiskAssessment } from '@/components/RiskAssessment';
 import { infoWallet } from '@/hooks/useWallet';
 import { useQuiz } from '@/hooks/useQuiz';
 
 const Index = () => {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges' | 'portfolio' | 'risk-assessment'>('dashboard');
   
   // Always call hooks in the same order
   const { isConnected, account, connectWallet, disconnectWallet, isOnCitreaNetwork } = infoWallet();
@@ -286,6 +288,19 @@ const Index = () => {
                   availablePoints={currentPoints}
                   completedQuizzes={completedQuizzes.length}
                   onBack={() => setCurrentView('dashboard')}
+                />
+              )}
+
+              {currentView === 'portfolio' && (
+                <PortfolioBuilder 
+                  onBack={() => setCurrentView('dashboard')}
+                />
+              )}
+
+              {currentView === 'risk-assessment' && (
+                <RiskAssessment 
+                  onBack={() => setCurrentView('dashboard')}
+                  onComplete={() => setCurrentView('dashboard')}
                 />
               )}
             </div>

@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Home, BookOpen, Coins, Bot, Award } from 'lucide-react';
+import { Home, BookOpen, Coins, Bot, Award, PieChart, TrendingUp } from 'lucide-react';
 
 interface NavigationProps {
-  currentView: 'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges';
-  setCurrentView: (view: 'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges') => void;
+  currentView: 'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges' | 'portfolio' | 'risk-assessment';
+  setCurrentView: (view: 'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges' | 'portfolio' | 'risk-assessment') => void;
   currentPoints: number;
   completedQuizzes: number;
   totalQuizzes: number;
@@ -30,6 +30,18 @@ export const Navigation: React.FC<NavigationProps> = ({
       label: 'Learn & Quiz',
       icon: BookOpen,
       badge: `${completedQuizzes}/${totalQuizzes}`,
+    },
+    {
+      id: 'portfolio' as const,
+      label: 'Portfolio',
+      icon: PieChart,
+      badge: null,
+    },
+    {
+      id: 'risk-assessment' as const,
+      label: 'Risk Profile',
+      icon: TrendingUp,
+      badge: null,
     },
     {
       id: 'chatbot' as const,
