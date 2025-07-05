@@ -30,6 +30,53 @@ export type Database = {
         }
         Relationships: []
       }
+      alerts: {
+        Row: {
+          alert_type: string
+          condition: string
+          created_at: string
+          id: string
+          is_active: boolean
+          message: string | null
+          portfolio_id: string | null
+          threshold: number | null
+          triggered_at: string | null
+          user_id: string
+        }
+        Insert: {
+          alert_type: string
+          condition?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          message?: string | null
+          portfolio_id?: string | null
+          threshold?: number | null
+          triggered_at?: string | null
+          user_id: string
+        }
+        Update: {
+          alert_type?: string
+          condition?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          message?: string | null
+          portfolio_id?: string | null
+          threshold?: number | null
+          triggered_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       claims: {
         Row: {
           created_at: string
@@ -217,6 +264,48 @@ export type Database = {
           },
         ]
       }
+      portfolios: {
+        Row: {
+          allocations: Json
+          created_at: string
+          deployed_txs: Json | null
+          id: string
+          name: string
+          risk_score: number
+          status: string
+          template_type: string
+          total_value: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          allocations?: Json
+          created_at?: string
+          deployed_txs?: Json | null
+          id?: string
+          name: string
+          risk_score?: number
+          status?: string
+          template_type?: string
+          total_value?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          allocations?: Json
+          created_at?: string
+          deployed_txs?: Json | null
+          id?: string
+          name?: string
+          risk_score?: number
+          status?: string
+          template_type?: string
+          total_value?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       prediction_markets: {
         Row: {
           asset_name: string
@@ -321,6 +410,51 @@ export type Database = {
           },
         ]
       }
+      protocols: {
+        Row: {
+          apy_current: number | null
+          chain: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          metadata: Json | null
+          name: string
+          protocol_type: string
+          risk_rating: number | null
+          tvl: number | null
+          updated_at: string
+        }
+        Insert: {
+          apy_current?: number | null
+          chain: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          name: string
+          protocol_type: string
+          risk_rating?: number | null
+          tvl?: number | null
+          updated_at?: string
+        }
+        Update: {
+          apy_current?: number | null
+          chain?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          name?: string
+          protocol_type?: string
+          risk_rating?: number | null
+          tvl?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       quests: {
         Row: {
           created_at: string
@@ -361,6 +495,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      reports: {
+        Row: {
+          data: Json
+          generated_at: string
+          id: string
+          report_type: string
+          user_id: string
+        }
+        Insert: {
+          data?: Json
+          generated_at?: string
+          id?: string
+          report_type?: string
+          user_id: string
+        }
+        Update: {
+          data?: Json
+          generated_at?: string
+          id?: string
+          report_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      risk_profiles: {
+        Row: {
+          assessment_data: Json | null
+          created_at: string
+          experience_level: string
+          id: string
+          investment_timeline: string
+          jurisdiction: string | null
+          kyc_status: string
+          risk_tolerance: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assessment_data?: Json | null
+          created_at?: string
+          experience_level?: string
+          id?: string
+          investment_timeline?: string
+          jurisdiction?: string | null
+          kyc_status?: string
+          risk_tolerance?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assessment_data?: Json | null
+          created_at?: string
+          experience_level?: string
+          id?: string
+          investment_timeline?: string
+          jurisdiction?: string | null
+          kyc_status?: string
+          risk_tolerance?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       site_pages: {
         Row: {
