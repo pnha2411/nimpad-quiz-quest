@@ -4,19 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Home, BookOpen, Coins, Bot, Award, PieChart, TrendingUp } from 'lucide-react';
 
 interface NavigationProps {
-  currentView: 'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges' | 'portfolio' | 'risk-assessment';
-  setCurrentView: (view: 'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges' | 'portfolio' | 'risk-assessment') => void;
-  currentPoints: number;
-  completedQuizzes: number;
-  totalQuizzes: number;
+  currentView: 'dashboard' | 'portfolio' | 'risk-assessment' | 'chatbot';
+  setCurrentView: (view: 'dashboard' | 'portfolio' | 'risk-assessment' | 'chatbot') => void;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({
   currentView,
   setCurrentView,
-  currentPoints,
-  completedQuizzes,
-  totalQuizzes,
 }) => {
   const navItems = [
     {
@@ -24,12 +18,6 @@ export const Navigation: React.FC<NavigationProps> = ({
       label: 'Dashboard',
       icon: Home,
       badge: null,
-    },
-    {
-      id: 'quiz' as const,
-      label: 'Learn & Quiz',
-      icon: BookOpen,
-      badge: `${completedQuizzes}/${totalQuizzes}`,
     },
     {
       id: 'portfolio' as const,
@@ -47,18 +35,6 @@ export const Navigation: React.FC<NavigationProps> = ({
       id: 'chatbot' as const,
       label: 'AI Assistant',
       icon: Bot,
-      badge: null,
-    },
-    {
-      id: 'claim' as const,
-      label: 'Claim Tokens',
-      icon: Coins,
-      badge: currentPoints > 0 ? currentPoints.toString() : null,
-    },
-    {
-      id: 'badges' as const,
-      label: 'NFT Badges',
-      icon: Award,
       badge: null,
     },
   ];

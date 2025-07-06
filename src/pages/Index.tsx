@@ -1,23 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { WalletConnection } from '@/components/WalletConnection';
-import { QuizEngine } from '@/components/QuizEngine';
 import { Dashboard } from '@/components/Dashboard';
-import { TokenClaiming } from '@/components/TokenClaiming';
 import { AIChatbot } from '@/components/AIChatbot';
-import { NFTBadges } from '@/components/NFTBadges';
 import { Navigation } from '@/components/Navigation';
 import { PortfolioBuilder } from '@/components/PortfolioBuilder';
 import { RiskAssessment } from '@/components/RiskAssessment';
 import { infoWallet } from '@/hooks/useWallet';
-import { useQuiz } from '@/hooks/useQuiz';
 
 const Index = () => {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'quiz' | 'claim' | 'chatbot' | 'badges' | 'portfolio' | 'risk-assessment'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'portfolio' | 'risk-assessment' | 'chatbot'>('dashboard');
   
   // Always call hooks in the same order
   const { isConnected, account, connectWallet, disconnectWallet, isOnCitreaNetwork } = infoWallet();
-  const { currentPoints, totalQuizzes, completedQuizzes } = useQuiz();
 
   // Redirect to dashboard when wallet is successfully connected
   useEffect(() => {
@@ -39,7 +34,7 @@ const Index = () => {
               <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 Nimpad
               </h1>
-              <span className="text-sm text-muted-foreground hidden sm:inline">Learn to Earn for BTC Builders</span>
+              <span className="text-sm text-muted-foreground hidden sm:inline">BTCfi Investment Tracker</span>
             </div>
             <div className="flex items-center space-x-4">
               {isConnected && (
@@ -73,11 +68,11 @@ const Index = () => {
               <div className="container mx-auto px-4 text-center relative z-10">
                 <div className="animate-fade-up">
                   <h1 className="text-5xl lg:text-7xl font-bold mb-6 glow-text">
-                    Build Bitcoin's
-                    <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"> Future</span>
+                    Build Your
+                    <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"> BTCfi Portfolio</span>
                   </h1>
                   <p className="text-xl lg:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-                    Master Bitcoin Layer 2 • Build dApps • Earn While Learning
+                    Track, Optimize & Grow Your Bitcoin DeFi Investments • Daily Yield Insights • Smart Risk Management
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                     <button 
@@ -97,7 +92,7 @@ const Index = () => {
                   {/* Progress indicator */}
                   <div className="inline-flex items-center bg-card/50 backdrop-blur px-6 py-3 rounded-full border border-border">
                     <div className="w-2 h-2 bg-primary rounded-full mr-3 animate-pulse"></div>
-                    <span className="text-sm text-muted-foreground">Quest 1 of 36 • Ready to Begin</span>
+                    <span className="text-sm text-muted-foreground">Portfolio Tracking • Yield Optimization • Risk Management</span>
                   </div>
                 </div>
               </div>
@@ -112,24 +107,24 @@ const Index = () => {
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                   {[
                     {
-                      icon: "₿",
-                      title: "Bitcoin L2 Mastery",
-                      description: "Deep dive into Bitcoin Layer 2 solutions, scaling, and infrastructure"
+                      icon: "📈",
+                      title: "Portfolio Tracking",
+                      description: "Real-time monitoring of your BTCfi investments across multiple chains and protocols"
                     },
                     {
-                      icon: "🔧",
-                      title: "Build & Deploy",
-                      description: "Create real dApps on Bitcoin L2 networks with hands-on tutorials"
+                      icon: "🔄",
+                      title: "Yield Optimization",
+                      description: "AI-powered recommendations to maximize your Bitcoin DeFi yields and returns"
                     },
                     {
-                      icon: "🎯",
-                      title: "Developer Rewards",
-                      description: "Earn tokens and NFTs as you progress through development milestones"
+                      icon: "🛡️",
+                      title: "Risk Management",
+                      description: "Advanced risk assessment and smart contract audit tracking for safe investing"
                     },
                     {
                       icon: "🌐",
                       title: "Multi-Chain Support",
-                      description: "Learn across Bitcoin L2s including Citrea, Lightning, and more"
+                      description: "Track assets across Core, Rootstock, Stacks, Bitlayer, and other Bitcoin L2s"
                     }
                   ].map((feature, index) => (
                     <div 
@@ -157,19 +152,19 @@ const Index = () => {
                     {
                       step: "01",
                       title: "Connect Wallet",
-                      description: "Link your MetaMask wallet to start your learning journey",
+                      description: "Link your MetaMask wallet to start tracking your BTCfi portfolio",
                       icon: "🔗"
                     },
                     {
                       step: "02", 
-                      title: "Pick Quest",
-                      description: "Choose from quizzes, AI chats, and interactive challenges",
-                      icon: "🎯"
+                      title: "Analyze Portfolio",
+                      description: "Get AI-powered insights on yield opportunities and risk assessment",
+                      icon: "📊"
                     },
                     {
                       step: "03",
-                      title: "Earn & Level Up",
-                      description: "Gain points, claim tokens, and mint achievement NFTs",
+                      title: "Optimize Returns",
+                      description: "Execute smart rebalancing and maximize your Bitcoin DeFi yields",
                       icon: "🚀"
                     }
                   ].map((step, index) => (
@@ -193,9 +188,9 @@ const Index = () => {
             {/* Credibility Section */}
             <section className="py-20 bg-card/20">
               <div className="container mx-auto px-4 text-center">
-                <h2 className="text-2xl font-semibold mb-8 animate-fade-up">Trusted by Bitcoin Builders</h2>
+                <h2 className="text-2xl font-semibold mb-8 animate-fade-up">Trusted by BTCfi Investors</h2>
                 <div className="flex flex-wrap justify-center items-center gap-8 mb-8">
-                  {['Lightning Network', 'Stacks', 'Rootstock', 'Citrea', 'Liquid'].map((tech, index) => (
+                  {['Core Blockchain', 'Rootstock RSK', 'Stacks', 'Bitlayer', 'BOB Network', 'BSquared'].map((tech, index) => (
                     <div 
                       key={index}
                       className="bg-card border border-border px-6 py-3 rounded-lg text-muted-foreground font-medium animate-fade-up"
@@ -207,16 +202,16 @@ const Index = () => {
                 </div>
                 <div className="grid md:grid-cols-3 gap-8 max-w-2xl mx-auto">
                   <div className="animate-fade-up">
-                    <div className="text-3xl font-bold text-primary">1,000+</div>
-                    <div className="text-muted-foreground">Active Learners</div>
+                    <div className="text-3xl font-bold text-primary">$10M+</div>
+                    <div className="text-muted-foreground">Portfolio Value Tracked</div>
                   </div>
                   <div className="animate-fade-up" style={{ animationDelay: '0.2s' }}>
-                    <div className="text-3xl font-bold text-secondary">50+</div>
-                    <div className="text-muted-foreground">Quests Available</div>
+                    <div className="text-3xl font-bold text-secondary">15%</div>
+                    <div className="text-muted-foreground">Average APY Optimized</div>
                   </div>
                   <div className="animate-fade-up" style={{ animationDelay: '0.4s' }}>
-                    <div className="text-3xl font-bold text-primary">10,000+</div>
-                    <div className="text-muted-foreground">Tokens Earned</div>
+                    <div className="text-3xl font-bold text-primary">1,000+</div>
+                    <div className="text-muted-foreground">Active Investors</div>
                   </div>
                 </div>
               </div>
@@ -227,16 +222,16 @@ const Index = () => {
               <div className="container mx-auto px-4 text-center">
                 <div className="max-w-2xl mx-auto animate-fade-up">
                   <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-                    Ready to Start Building on <span className="text-primary">Bitcoin</span>?
+                    Ready to Optimize Your <span className="text-primary">BTCfi Portfolio</span>?
                   </h2>
                   <p className="text-xl text-muted-foreground mb-8">
-                    Join thousands of developers mastering Bitcoin Layer 2 technologies.
+                    Join smart investors maximizing Bitcoin DeFi yields with data-driven insights.
                   </p>
                   <button 
                     onClick={connectWallet}
                     className="bg-primary text-primary-foreground px-12 py-4 rounded-lg text-xl font-semibold animate-glow hover:scale-105 transition-transform"
                   >
-                    Connect Wallet & Start Building
+                    Connect Wallet & Start Tracking
                   </button>
                 </div>
               </div>
@@ -247,46 +242,21 @@ const Index = () => {
             <Navigation 
               currentView={currentView} 
               setCurrentView={setCurrentView}
-              currentPoints={currentPoints}
-              completedQuizzes={completedQuizzes.length}
-              totalQuizzes={totalQuizzes}
             />
             
             <div className="mt-8">
               {currentView === 'dashboard' && (
                 <Dashboard 
-                  points={currentPoints}
-                  completedQuizzes={completedQuizzes.length}
-                  totalQuizzes={totalQuizzes}
-                  onStartQuiz={() => setCurrentView('quiz')}
-                  onClaimTokens={() => setCurrentView('claim')}
-                />
-              )}
-              
-              {currentView === 'quiz' && (
-                <QuizEngine 
-                  onComplete={() => setCurrentView('dashboard')}
-                  onBack={() => setCurrentView('dashboard')}
-                />
-              )}
-              
-              {currentView === 'claim' && (
-                <TokenClaiming 
-                  availablePoints={30}
-                  onBack={() => setCurrentView('dashboard')}
+                  points={0}
+                  completedQuizzes={0}
+                  totalQuizzes={10}
+                  onStartQuiz={() => setCurrentView('portfolio')}
+                  onClaimTokens={() => setCurrentView('portfolio')}
                 />
               )}
 
               {currentView === 'chatbot' && (
                 <AIChatbot 
-                  onBack={() => setCurrentView('dashboard')}
-                />
-              )}
-
-              {currentView === 'badges' && (
-                <NFTBadges 
-                  availablePoints={currentPoints}
-                  completedQuizzes={completedQuizzes.length}
                   onBack={() => setCurrentView('dashboard')}
                 />
               )}
@@ -320,23 +290,23 @@ const Index = () => {
                 <span className="font-bold text-lg">Nimpad</span>
               </div>
               <p className="text-muted-foreground text-sm">
-                The ultimate learn-to-earn platform for Bitcoin builders and developers.
+                The ultimate BTCfi investment tracker for smart Bitcoin DeFi investors.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Learn</h4>
+              <h4 className="font-semibold mb-4">Track</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">Quests</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">AI Chat</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Documentation</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Portfolio</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Yield Opportunities</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Risk Assessment</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Earn</h4>
+              <h4 className="font-semibold mb-4">Optimize</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">Tokens</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">NFT Badges</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Leaderboard</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">AI Recommendations</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Auto Rebalancing</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Performance Analytics</a></li>
               </ul>
             </div>
             <div>
@@ -353,7 +323,7 @@ const Index = () => {
               <span>Built for Bitcoin Layer 2 Ecosystem</span>
             </div>
             <div className="text-center md:text-right">
-              <p>Build • Learn • Earn • Scale</p>
+              <p>Track • Optimize • Grow • Scale</p>
             </div>
           </div>
         </div>
