@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Home, BookOpen, Coins, Bot, Award, PieChart, TrendingUp } from 'lucide-react';
+import { Home, BookOpen, Coins, Bot, Award, PieChart, TrendingUp, BarChart3, Building2, ShoppingCart } from 'lucide-react';
 
 interface NavigationProps {
-  currentView: 'dashboard' | 'portfolio' | 'risk-assessment' | 'chatbot';
-  setCurrentView: (view: 'dashboard' | 'portfolio' | 'risk-assessment' | 'chatbot') => void;
+  currentView: 'dashboard' | 'portfolio' | 'risk-assessment' | 'chatbot' | 'market-analysis' | 'protocols' | 'asset-wizard';
+  setCurrentView: (view: 'dashboard' | 'portfolio' | 'risk-assessment' | 'chatbot' | 'market-analysis' | 'protocols' | 'asset-wizard') => void;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({
@@ -17,6 +17,24 @@ export const Navigation: React.FC<NavigationProps> = ({
       id: 'dashboard' as const,
       label: 'Dashboard',
       icon: Home,
+      badge: null,
+    },
+    {
+      id: 'market-analysis' as const,
+      label: 'Market Analysis',
+      icon: BarChart3,
+      badge: null,
+    },
+    {
+      id: 'protocols' as const,
+      label: 'Protocols',
+      icon: Building2,
+      badge: null,
+    },
+    {
+      id: 'asset-wizard' as const,
+      label: 'Asset Wizard',
+      icon: ShoppingCart,
       badge: null,
     },
     {
@@ -40,7 +58,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border p-1 flex flex-wrap gap-1">
+    <div className="bg-card rounded-xl shadow-sm border p-1 flex flex-wrap gap-1 overflow-x-auto">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = currentView === item.id;
