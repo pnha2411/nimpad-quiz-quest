@@ -26,17 +26,26 @@ const Index = () => {
       {/* Header */}
       <header className="border-b border-border bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            {/* Left: Logo and Title */}
+            <div className="flex items-center space-x-3 min-w-0">
               <img
                 src={nimpadLogo}
                 alt="Nimpad Logo"
                 className="w-10 h-10 rounded-xl shadow-lg border-4 border-white bg-white animate-float"
                 style={{ objectFit: 'cover' }}
-              />             
-              <span className="text-sm text-[#4b4b6b] hidden sm:inline font-medium">BTCfi Investment Tracker</span>
+              />
+              <span className="text-sm text-[#4b4b6b] hidden sm:inline font-medium truncate">BTCfi Investment Tracker</span>
             </div>
-            <div className="flex items-center space-x-4">
+            {/* Center: Navigation */}
+            <div className="flex-1 flex justify-center min-w-0">
+              <Navigation 
+                currentView={currentView} 
+                setCurrentView={setCurrentView}
+              />
+            </div>
+            {/* Right: Wallet Connection */}
+            <div className="flex items-center space-x-4 min-w-0 justify-end">
               <WalletConnection 
                 isConnected={isConnected}
                 account={account}
@@ -44,13 +53,6 @@ const Index = () => {
                 onDisconnect={disconnectWallet}
               />
             </div>
-          </div>
-          {/* Responsive Navigation */}
-          <div className="mt-4 w-full overflow-x-auto">
-            <Navigation 
-              currentView={currentView} 
-              setCurrentView={setCurrentView}
-            />
           </div>
         </div>
       </header>
