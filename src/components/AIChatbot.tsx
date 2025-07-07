@@ -23,7 +23,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ onBack }) => {
     {
       id: '1',
       type: 'bot',
-      content: 'Hello! I\'m your Nim AI assistant. Ask me anything about CoreDao, DeFi, BtcFi, or Bitcoin Layer 2 technology!',
+      content: 'Hello! I\'m your Core DAO Builder Assistant. Ask me anything about Core DAO development, Bitcoin staking, Satoshi Plus consensus, or building BTCfi dApps!',
       timestamp: new Date(),
     }
   ]);
@@ -40,58 +40,94 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ onBack }) => {
   const generateBotResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
     
-    // Knowledge base for Citrea-related questions
-    if (lowerMessage.includes('citrea') && lowerMessage.includes('what')) {
-      return "Citrea is Bitcoin's first ZK rollup that brings scalability and programmability to Bitcoin. It uses zero-knowledge proofs to enable faster, cheaper transactions while maintaining Bitcoin's security guarantees. Citrea is EVM-compatible, meaning developers can build full-featured DApps using familiar Ethereum tools.";
+    // Core DAO Overview and Basics
+    if (lowerMessage.includes('what') && (lowerMessage.includes('core dao') || lowerMessage.includes('coredao'))) {
+      return "Core DAO is a revolutionary Bitcoin-powered, EVM-compatible Layer 1 blockchain launched on January 14, 2023. It's the first blockchain designed to be Bitcoin's complementary and hyper-scalable smart contract platform, uniquely combining Bitcoin's proven security with modern smart contract capabilities through its innovative Satoshi Plus consensus mechanism.";
     }
     
-    if (lowerMessage.includes('zk') || lowerMessage.includes('zero-knowledge')) {
-      return "Zero-knowledge proofs allow Citrea to process transactions off-chain and then submit cryptographic proofs to Bitcoin that verify the validity of all transactions without revealing their details. This enables scalability while maintaining Bitcoin's security and decentralization.";
+    if (lowerMessage.includes('satoshi plus') || lowerMessage.includes('consensus')) {
+      return "Satoshi Plus is Core's unique consensus mechanism that integrates three components: Delegated Proof of Work (DPoW) where Bitcoin miners delegate hash power, Self-Custodial Bitcoin Staking using Bitcoin's native CLTV timelock, and Delegated Proof of Stake (DPoS) with CORE tokens. Currently ~75% of Bitcoin mining hash power contributes to Core's security.";
     }
     
-    if (lowerMessage.includes('btcfi') || lowerMessage.includes('bitcoin defi')) {
-      return "BtcFi (Bitcoin DeFi) refers to decentralized financial applications built on Bitcoin or Bitcoin-compatible networks like Citrea. This includes lending protocols, DEXs, yield farming, and other DeFi primitives that were previously only available on other blockchains. Citrea enables BtcFi by providing smart contract functionality to Bitcoin.";
+    if (lowerMessage.includes('bitcoin staking') || lowerMessage.includes('stake bitcoin')) {
+      return "Core enables self-custodial Bitcoin staking where you maintain complete custody of your Bitcoin while earning CORE token rewards. Use Bitcoin's native CLTV timelock functionality - your Bitcoin never leaves your wallet! Over 8,200 BTC is currently staked. Connect Bitcoin wallet (Xverse, Unisat, OKX) and Core wallet (MetaMask) to start earning daily rewards.";
     }
     
-    if (lowerMessage.includes('defi')) {
-      return "DeFi (Decentralized Finance) on Citrea includes protocols for trading, lending, borrowing, yield farming, and more. Since Citrea is EVM-compatible, many Ethereum DeFi protocols can be deployed with minimal changes. This brings the entire DeFi ecosystem to Bitcoin users.";
+    // Development Setup and Configuration
+    if (lowerMessage.includes('setup') || lowerMessage.includes('development environment')) {
+      return "For Core development: Use Node.js v20.11.1+, Solidity 0.8.24+ with Shanghai EVM version. Mainnet RPC: https://rpc.coredao.org/ (Chain ID: 1116). Testnet RPC: https://rpc.test2.btcs.network (Chain ID: 1114). Configure Hardhat with Shanghai EVM and 200 optimization runs for best compatibility.";
     }
     
-    if (lowerMessage.includes('evm') || lowerMessage.includes('ethereum')) {
-      return "Citrea uses the Ethereum Virtual Machine (EVM), making it compatible with Ethereum smart contracts, tools, and infrastructure. Developers can use Solidity, MetaMask, Remix, and other familiar tools to build on Citrea. This compatibility enables easy porting of existing Ethereum DApps to Bitcoin.";
+    if (lowerMessage.includes('hardhat') || lowerMessage.includes('configuration')) {
+      return "Core Hardhat config: Set evmVersion to 'shanghai', use Solidity 0.8.24+, enable optimizer with 200 runs. Mainnet URL: https://rpc.coredao.org/ (Chain ID: 1116), Testnet: https://rpc.test2.btcs.network (Chain ID: 1114). Supports all standard tools: Remix IDE, Foundry, Ethers.js, Web3.js.";
     }
     
-    if (lowerMessage.includes('token') || lowerMessage.includes('cBTC')) {
-      return "Citrea uses cBTC as its native token, which represents Bitcoin locked in the system. Users can bridge Bitcoin to Citrea to get cBTC, which can then be used in DeFi applications, smart contracts, and other on-chain activities. The bridging process is secured by Bitcoin's consensus.";
+    if (lowerMessage.includes('solidity') || lowerMessage.includes('smart contract')) {
+      return "Core uses Solidity 0.8.24+ with Shanghai EVM version. Enable optimization with 200 runs. All Ethereum smart contracts work on Core with minimal changes. Deploy to Core Testnet first, then verify contracts using Core Scan. Core supports the full Ethereum developer ecosystem including OpenZeppelin libraries.";
     }
     
-    if (lowerMessage.includes('bridge') || lowerMessage.includes('deposit')) {
-      return "To use Citrea, you need to bridge Bitcoin from the main Bitcoin network to Citrea. This involves locking your Bitcoin in a bridge contract and receiving cBTC on Citrea. The bridge is secured by Bitcoin's consensus mechanism and zero-knowledge proofs.";
+    // Network Information and Tokenomics
+    if (lowerMessage.includes('core token') || lowerMessage.includes('tokenomics')) {
+      return "CORE token has a fixed supply of 2.1 billion tokens (like Bitcoin) with an 81-year emission schedule. Distribution: 39.995% Node Mining, 25.029% Users, 15% Contributors, 10% Reserves, 9.5% Treasury. Used for transaction fees, staking, and governance. The network achieves 3-second block times with 27 validators.";
     }
     
-    if (lowerMessage.includes('gas') || lowerMessage.includes('fee')) {
-      return "Gas fees on Citrea are paid in cBTC and are significantly lower than Bitcoin main chain fees. Since transactions are processed off-chain and batched into proofs, users enjoy faster confirmation times and lower costs while maintaining Bitcoin-level security.";
+    if (lowerMessage.includes('validator') || lowerMessage.includes('mining')) {
+      return "Core operates with top 27 validators based on hybrid scores from delegated hash power, staked Bitcoin, and staked CORE tokens. Bitcoin miners can delegate hash power to earn supplemental CORE rewards with zero additional cost. Validator elections occur every 200 blocks (~1 day).";
     }
     
-    if (lowerMessage.includes('security') || lowerMessage.includes('safe')) {
-      return "Citrea inherits Bitcoin's security through its ZK rollup design. All transactions are verified by zero-knowledge proofs that are posted to Bitcoin. This means Citrea is as secure as Bitcoin itself, while providing additional functionality through smart contracts.";
+    // Ecosystem and dApps
+    if (lowerMessage.includes('ecosystem') || lowerMessage.includes('dapps')) {
+      return "Core ecosystem has 125+ dApps with $634M+ TVL, 27M+ addresses, 308M+ transactions. Major DeFi: Colend (lending), BitFLUX (BTC liquidity), Glyph Exchange (cross-chain DEX), SushiSwap, Curve Finance. Plus gaming, NFTs, and social dApps. 180+ projects launched in 2024 alone!";
     }
     
-    if (lowerMessage.includes('developer') || lowerMessage.includes('build')) {
-      return "Developers can build on CoreDao using familiar Ethereum tools like Solidity, Hardhat, and Remix. The development experience is nearly identical to Ethereum, but with the added benefit of Bitcoin's security. You can deploy DeFi protocols, NFT marketplaces, games, and any other smart contract application.";
+    if (lowerMessage.includes('defi') || lowerMessage.includes('btcfi')) {
+      return "BTCfi on Core includes lending (Colend), DEXs (Glyph, SushiSwap), stablecoin trading (Curve), and yield farming. Core enables Bitcoin holders to earn yield while maintaining custody. Upcoming: lstBTC for institutional liquid staking and Bitcoin-backed stablecoins as the next BTCfi frontier.";
     }
     
-    // Default responses for common question patterns
+    // Bridge and Cross-Chain
+    if (lowerMessage.includes('bridge') || lowerMessage.includes('cross-chain')) {
+      return "Core Bridge (bridge.coredao.org) is powered by LayerZero, connecting Core with Ethereum, BSC, Polygon, Arbitrum, Optimism, Avalanche. Supports major tokens: USDC, USDT, WBTC, WETH. Bi-directional transfers with security audits. Essential for moving assets to Core ecosystem.";
+    }
+    
+    // Building and Development
+    if (lowerMessage.includes('build') || lowerMessage.includes('developer') || lowerMessage.includes('dapp')) {
+      return "Build on Core using familiar Ethereum tools! Steps: 1) Setup Hardhat with Shanghai EVM, 2) Deploy to Core Testnet (get tCORE2 from faucet), 3) Test thoroughly, 4) Deploy to mainnet, 5) Verify contracts. Use MetaMask, Remix IDE, or Foundry. Join Core Academy for structured learning and developer courses.";
+    }
+    
+    if (lowerMessage.includes('tutorial') || lowerMessage.includes('learn')) {
+      return "Core Academy offers structured learning: blockchain fundamentals, Web3 concepts, Core-specific development. Five developer courses cover DeFi development, NFT collections, blockchain gaming, and social media dApps. Resources: docs.coredao.org, GitHub, Discord community, and Core Developer Program.";
+    }
+    
+    // Advanced Features
+    if (lowerMessage.includes('dual staking') || lowerMessage.includes('yield')) {
+      return "Dual Staking lets you stake both Bitcoin and CORE simultaneously for enhanced yields. Higher CORE:BTC ratios unlock higher yield tiers. Satoshi Tier offers maximum rewards. Also available: stCORE (liquid staking for CORE) and upcoming lstBTC for institutional Bitcoin liquid staking.";
+    }
+    
+    if (lowerMessage.includes('governance') || lowerMessage.includes('voting')) {
+      return "Core uses progressive decentralization. Current: on-chain parameter adjustment, community controls 'm Parameter' and fee burn percentage. Future: full on-chain governance with CORE token voting, collateral requirements for proposals, time delays to prevent manipulation. Participate through Core Improvement Proposals (CIPs).";
+    }
+    
+    // Getting Started
+    if (lowerMessage.includes('start') || lowerMessage.includes('begin')) {
+      return "Getting started: 1) Add Core network to MetaMask (Chain ID: 1116, RPC: https://rpc.coredao.org/), 2) Bridge assets using bridge.coredao.org, 3) Stake CORE or Bitcoin at stake.coredao.org, 4) Build your first dApp following tutorials, 5) Join Discord community for support!";
+    }
+    
+    // Network Statistics and Performance
+    if (lowerMessage.includes('stats') || lowerMessage.includes('performance')) {
+      return "Core Network Stats: 3-second block times, $634M+ TVL, 27M+ unique addresses, 308M+ transactions, 125+ dApps, ~75% of Bitcoin hash power securing the network. Top 10 blockchain for AI dApps. Growing partnerships with BitGo, Copper, Hex Trust for institutional adoption.";
+    }
+    
+    // Common How/Why Questions
     if (lowerMessage.includes('how') && lowerMessage.includes('work')) {
-      return "Citrea works by processing transactions off-chain in a ZK rollup, then posting cryptographic proofs to Bitcoin. This allows for fast, cheap transactions while maintaining Bitcoin's security. Smart contracts run on the EVM, enabling complex DeFi applications.";
+      return "Core works through Satoshi Plus consensus: Bitcoin miners delegate hash power, Bitcoin holders stake natively, CORE holders participate in DPoS. This creates a hybrid system that's secured by Bitcoin's hash power while enabling fast, cheap smart contracts with 3-second blocks and EVM compatibility.";
     }
     
-    if (lowerMessage.includes('why') && lowerMessage.includes('bitcoin')) {
-      return "Bitcoin is the most secure and decentralized blockchain, but it lacks programmability. Citrea solves this by adding smart contract functionality while preserving Bitcoin's security guarantees. This unlocks DeFi, NFTs, and other applications for Bitcoin users.";
+    if (lowerMessage.includes('why') && (lowerMessage.includes('bitcoin') || lowerMessage.includes('core'))) {
+      return "Core solves Bitcoin's idle problem - 99% of Bitcoin sits unused. Core enables Bitcoin to earn yield while maintaining self-custody, transforming it from static store of value to productive asset. Combines Bitcoin's security with Ethereum's programmability for the best of both worlds.";
     }
     
-    // General helpful response
-    return "That's a great question! For detailed technical information, I recommend checking the official Citrea documentation at https://docs.citrea.xyz/. You can also ask me more specific questions about Citrea's ZK rollup technology, DeFi applications, or how to get started building on the platform.";
+    // Default helpful response
+    return "I'm here to help you build on Core DAO! Ask me about Bitcoin staking, smart contract development, the Satoshi Plus consensus, ecosystem dApps, or getting started. For detailed docs visit docs.coredao.org, join our Discord, or check out Core Academy for structured learning!";
   };
 
   const handleSendMessage = async () => {
@@ -147,9 +183,9 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ onBack }) => {
         <CardContent className="py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="font-medium text-blue-900 mb-1">Citrea AI Assistant</h4>
+              <h4 className="font-medium text-blue-900 mb-1">Core DAO Builder Assistant</h4>
               <p className="text-sm text-blue-700">
-                Get instant answers about CoreDao, DeFi, BtcFi, and Bitcoin Layer 2
+                Get instant answers about Core DAO, Bitcoin staking, Satoshi Plus, and BTCfi development
               </p>
             </div>
             <Button variant="outline" size="sm" asChild>
@@ -172,7 +208,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ onBack }) => {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Bot className="w-6 h-6 mr-2 text-blue-600" />
-            Chat with Nim Agent
+            Chat with Core DAO Builder Agent
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -234,7 +270,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ onBack }) => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Ask me about CoreDao, DeFi, BtcFi..."
+              placeholder="Ask me about Core DAO, Bitcoin staking, Satoshi Plus..."
               disabled={isLoading}
               className="flex-1"
             />
@@ -250,10 +286,10 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ onBack }) => {
           {/* Suggested Questions */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2">
             {[
-              "What is Citrea?",
-              "How does ZK rollup work?",
-              "What is BtcFi?",
-              "How to build on CoreDao?"
+              "What is Core DAO?",
+              "How does Satoshi Plus work?",
+              "How to stake Bitcoin?",
+              "How to build on Core DAO?"
             ].map((question) => (
               <Button
                 key={question}
