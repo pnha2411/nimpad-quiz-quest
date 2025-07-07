@@ -38,6 +38,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     { id: 4, title: "Risk Assessment", completed: true, streak: 5 }
   ]);
   const [showCongrats, setShowCongrats] = useState(false);
+  const [animatingStep, setAnimatingStep] = useState<number | null>(null);
 
   // Load progress from localStorage on mount
   useEffect(() => {
@@ -65,6 +66,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
     }
   }, [completedSteps]);
 
+  // Auto-advance to next step when current step is completed
+  useEffect(() => {
+    const nextIncompleteStep = investmentSteps.find(step => !completedSteps.includes(step.id));
+    if (nextIncompleteStep && currentStep !== nextIncompleteStep.id) {
+      const timer = setTimeout(() => {
+        setCurrentStep(nextIncompleteStep.id);
+      }, 1000); // 1 second delay for smooth transition
+      return () => clearTimeout(timer);
+    }
+  }, [completedSteps, currentStep]);
+
   // Save daily habits to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('nimpad_daily_habits', JSON.stringify(dailyHabits));
@@ -72,7 +84,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   const completeStep = (stepId: number) => {
     if (!completedSteps.includes(stepId)) {
-      setCompletedSteps([...completedSteps, stepId]);
+      setAnimatingStep(stepId);
+      setTimeout(() => {
+        setCompletedSteps([...completedSteps, stepId]);
+        setAnimatingStep(null);
+      }, 300); // Animation duration
     }
   };
 
@@ -242,7 +258,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </h2>
         
         {investmentSteps.map((step, index) => (
-          <Card key={step.id} className={`bg-gradient-to-r ${step.color} text-white overflow-hidden`}>
+          <Card 
+            key={step.id} 
+            className={`bg-gradient-to-r ${step.color} text-white overflow-hidden transition-all duration-500 ${
+              currentStep === step.id ? 'ring-4 ring-white/50 scale-105' : ''
+            } ${
+              animatingStep === step.id ? 'animate-pulse' : ''
+            } ${
+              completedSteps.includes(step.id) ? 'opacity-75' : ''
+            }`}
+          >
             <CardHeader className="relative">
               <div className="absolute top-0 right-0 text-6xl opacity-20">
                 {step.emoji}
