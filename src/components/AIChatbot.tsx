@@ -23,7 +23,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ onBack }) => {
     {
       id: '1',
       type: 'bot',
-      content: 'Hello! I\'m your Citrea AI assistant. Ask me anything about Citrea, DeFi, BtcFi, or Bitcoin Layer 2 technology!',
+      content: 'Hello! I\'m your Nim AI assistant. Ask me anything about CoreDao, DeFi, BtcFi, or Bitcoin Layer 2 technology!',
       timestamp: new Date(),
     }
   ]);
@@ -78,7 +78,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ onBack }) => {
     }
     
     if (lowerMessage.includes('developer') || lowerMessage.includes('build')) {
-      return "Developers can build on Citrea using familiar Ethereum tools like Solidity, Hardhat, and Remix. The development experience is nearly identical to Ethereum, but with the added benefit of Bitcoin's security. You can deploy DeFi protocols, NFT marketplaces, games, and any other smart contract application.";
+      return "Developers can build on CoreDao using familiar Ethereum tools like Solidity, Hardhat, and Remix. The development experience is nearly identical to Ethereum, but with the added benefit of Bitcoin's security. You can deploy DeFi protocols, NFT marketplaces, games, and any other smart contract application.";
     }
     
     // Default responses for common question patterns
@@ -149,12 +149,12 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ onBack }) => {
             <div>
               <h4 className="font-medium text-blue-900 mb-1">Citrea AI Assistant</h4>
               <p className="text-sm text-blue-700">
-                Get instant answers about Citrea, DeFi, BtcFi, and Bitcoin Layer 2
+                Get instant answers about CoreDao, DeFi, BtcFi, and Bitcoin Layer 2
               </p>
             </div>
             <Button variant="outline" size="sm" asChild>
               <a 
-                href="https://docs.citrea.xyz/" 
+                href="https://docs.coredao.org/docs/intro" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-flex items-center"
@@ -172,7 +172,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ onBack }) => {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Bot className="w-6 h-6 mr-2 text-blue-600" />
-            Chat with Citrea AI
+            Chat with Nim Agent
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -234,7 +234,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ onBack }) => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Ask me about Citrea, DeFi, BtcFi..."
+              placeholder="Ask me about CoreDao, DeFi, BtcFi..."
               disabled={isLoading}
               className="flex-1"
             />
@@ -253,7 +253,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ onBack }) => {
               "What is Citrea?",
               "How does ZK rollup work?",
               "What is BtcFi?",
-              "How to build on Citrea?"
+              "How to build on CoreDao?"
             ].map((question) => (
               <Button
                 key={question}

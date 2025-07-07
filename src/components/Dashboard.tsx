@@ -1,27 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { 
-  TrendingUp, 
-  DollarSign, 
-  Activity, 
-  BarChart3, 
-  PieChart,
-  ArrowUpRight,
-  ArrowDownRight,
-  Bitcoin,
   Target,
   Star,
-  Heart,
-  Sparkles,
   BookOpen,
   ExternalLink,
-  CheckCircle2,
   Clock,
-  AlertCircle,
-  TrendingDown
+  PartyPopper,
+  CheckCircle2,
 } from 'lucide-react';
+import nimpadLogo from '/nimpad_logo.jpg';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'; // Make sure you have a Dialog component
 
 interface DashboardProps {
   points: number;
@@ -40,13 +31,60 @@ export const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-
-  const dailyHabits = [
+  const [dailyHabits, setDailyHabits] = useState([
     { id: 1, title: "Morning Market Analysis", completed: false, streak: 3 },
     { id: 2, title: "Protocol Research", completed: true, streak: 7 },
     { id: 3, title: "Portfolio Review", completed: false, streak: 2 },
     { id: 4, title: "Risk Assessment", completed: true, streak: 5 }
-  ];
+  ]);
+  const [showCongrats, setShowCongrats] = useState(false);
+
+  // Load progress from localStorage on mount
+  useEffect(() => {
+    const savedSteps = localStorage.getItem('nimpad_completed_steps');
+    if (savedSteps) {
+      try {
+        setCompletedSteps(JSON.parse(savedSteps));
+      } catch {}
+    }
+    const savedHabits = localStorage.getItem('nimpad_daily_habits');
+    if (savedHabits) {
+      try {
+        setDailyHabits(JSON.parse(savedHabits));
+      } catch {}
+    }
+  }, []);
+
+  // Save completed steps to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('nimpad_completed_steps', JSON.stringify(completedSteps));
+    // Show congratulation popup if all steps are completed and not shown before
+    if (completedSteps.length === 4 && !localStorage.getItem('nimpad_congrats_shown')) {
+      setShowCongrats(true);
+      localStorage.setItem('nimpad_congrats_shown', 'true');
+    }
+  }, [completedSteps]);
+
+  // Save daily habits to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('nimpad_daily_habits', JSON.stringify(dailyHabits));
+  }, [dailyHabits]);
+
+  const completeStep = (stepId: number) => {
+    if (!completedSteps.includes(stepId)) {
+      setCompletedSteps([...completedSteps, stepId]);
+    }
+  };
+
+  const toggleHabit = (habitId: number) => {
+    setDailyHabits(prev =>
+      prev.map(habit =>
+        habit.id === habitId
+          ? { ...habit, completed: !habit.completed }
+          : habit
+      )
+    );
+  };
 
   const investmentSteps = [
     {
@@ -142,34 +180,37 @@ export const Dashboard: React.FC<DashboardProps> = ({
     { name: "Stacks DeFi", apy: 9.8, risk: "Medium", chain: "Stacks", tvl: "$185M" }
   ];
 
-  const completeStep = (stepId: number) => {
-    if (!completedSteps.includes(stepId)) {
-      setCompletedSteps([...completedSteps, stepId]);
-    }
-  };
-
   return (
-    <div className="container mx-auto px-4 pb-8 space-y-6 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 min-h-screen">
-      {/* Anime Header */}
-      <div className="text-center py-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-200/20 to-pink-200/20 rounded-3xl"></div>
-        <div className="relative z-10">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent">
-            ✨ BTCfi Sensei Academy ✨
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto flex items-center justify-center">
-            <Star className="w-6 h-6 mr-2 text-yellow-500" />
-            Master the art of Bitcoin DeFi investment with daily practice
-            <Heart className="w-6 h-6 ml-2 text-pink-500" />
-          </p>
-        </div>
-      </div>
+    <div className="container mx-auto px-4 pb-8 space-y-6 bg-gradient-to-br from-[#f7f6fa] via-[#e9e6f3] to-[#e3eafc] min-h-screen">
+      {/* Congratulation Popup */}
+      <Dialog open={showCongrats} onOpenChange={setShowCongrats}>
+        <DialogContent className="max-w-md mx-auto text-center">
+          <DialogHeader>
+            <DialogTitle>
+              <div className="flex flex-col items-center space-y-2">
+                <PartyPopper className="w-12 h-12 text-yellow-400 animate-bounce" />
+                <span className="text-2xl font-bold text-green-700">Congratulations!</span>
+              </div>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="my-4">
+            <p className="text-lg text-gray-700 mb-2">You've completed all BTCfi Investment Journey steps!</p>
+            <p className="text-md text-gray-600">You're now a BTCfi Master. Keep learning and exploring new protocols!</p>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setShowCongrats(false)} className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white">
+              <CheckCircle2 className="w-5 h-5 mr-2" />
+              Awesome!
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Daily Habits Tracker */}
-      <Card className="bg-gradient-to-r from-purple-100 to-pink-100 border-purple-200">
+      <Card className="bg-gradient-to-r from-[#e3eafc] to-[#f7f6fa] border-[#b6b6e3] shadow-md">
         <CardHeader>
-          <CardTitle className="flex items-center text-purple-800">
-            <Sparkles className="w-6 h-6 mr-2 text-purple-600" />
+          <CardTitle className="flex items-center text-[#2e2e5e]">
+            <img src={nimpadLogo} alt="Nimpad Logo" className="w-8 h-8 rounded mr-2 border-2 border-white shadow" />
             Daily BTCfi Habits
           </CardTitle>
         </CardHeader>
@@ -196,7 +237,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
       {/* Investment Steps */}
       <div className="space-y-6">
-        <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+        <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-[#2e2e5e] to-[#2e7cf6] bg-clip-text text-transparent">
           🎌 Your BTCfi Investment Journey 🎌
         </h2>
         
@@ -282,10 +323,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Protocol Showcase */}
-      <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
+      <Card className="bg-gradient-to-br from-[#e3eafc] to-[#f7f6fa] border-[#b6b6e3] shadow-md">
         <CardHeader>
-          <CardTitle className="flex items-center text-blue-800">
-            <TrendingUp className="w-6 h-6 mr-2" />
+          <CardTitle className="flex items-center text-[#2e7cf6]">
+            <img src={nimpadLogo} alt="Nimpad Logo" className="w-6 h-6 rounded mr-2 border-2 border-white shadow" />
             🌟 Trending BTCfi Protocols 🌟
           </CardTitle>
         </CardHeader>
@@ -330,7 +371,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </Card>
 
       {/* Progress Summary */}
-      <Card className="bg-gradient-to-r from-green-100 to-blue-100 border-green-200">
+      <Card className="bg-gradient-to-r from-[#e3eafc] to-[#f7f6fa] border-[#b6b6e3] shadow-md">
         <CardContent className="py-8 text-center">
           <h3 className="text-2xl font-bold mb-4 text-green-800">
             🎯 Your BTCfi Mastery Progress 🎯
