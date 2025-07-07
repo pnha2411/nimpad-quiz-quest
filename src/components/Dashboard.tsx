@@ -57,7 +57,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       emoji: "🎯",
       color: "from-pink-400 to-purple-500",
       resources: [
-        { title: "DeFiLlama BTCfi Analytics", url: "https://defillama.com/protocols/Bitcoin", type: "Analytics" },
+        { title: "DeFiLlama Yield Analytics", url: "https://defillama.com/yields", type: "Analytics" },
         { title: "CoinGecko BTCfi Sector", url: "https://www.coingecko.com/en/categories/bitcoin-layer-2", type: "Data" },
         { title: "Dune Analytics BTCfi Dashboard", url: "https://dune.com/browse/dashboards", type: "On-Chain" },
         { title: "BitcoinLayers.org", url: "https://bitcoinlayers.org/", type: "Infrastructure" }
