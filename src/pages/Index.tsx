@@ -154,7 +154,6 @@ const Index = () => {
             <div>
               <h4 className="font-semibold mb-4">Community</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="https://docs.citrea.xyz/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Citrea Docs</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">Discord</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">Twitter</a></li>
               </ul>
