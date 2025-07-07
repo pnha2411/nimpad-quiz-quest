@@ -251,100 +251,140 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </CardContent>
       </Card>
 
-      {/* Investment Steps */}
+      {/* Investment Steps - Single Step View */}
       <div className="space-y-6">
-        <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-[#2e2e5e] to-[#2e7cf6] bg-clip-text text-transparent">
-          🎌 Your BTCfi Investment Journey 🎌
-        </h2>
-        
-        {investmentSteps.map((step, index) => (
-          <Card 
-            key={step.id} 
-            className={`bg-gradient-to-r ${step.color} text-white overflow-hidden transition-all duration-500 ${
-              currentStep === step.id ? 'ring-4 ring-white/50 scale-105' : ''
-            } ${
-              animatingStep === step.id ? 'animate-pulse' : ''
-            } ${
-              completedSteps.includes(step.id) ? 'opacity-75' : ''
-            }`}
-          >
-            <CardHeader className="relative">
-              <div className="absolute top-0 right-0 text-6xl opacity-20">
-                {step.emoji}
-              </div>
-              <CardTitle className="flex items-center text-white">
-                <span className="bg-white text-purple-600 w-8 h-8 rounded-full flex items-center justify-center mr-3 font-bold">
-                  {step.id}
-                </span>
-                {step.title}
-              </CardTitle>
-              <p className="text-white/90 font-medium">{step.subtitle}</p>
-              <p className="text-white/80">{step.description}</p>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Tasks */}
-              <div className="bg-white/10 rounded-lg p-4">
-                <h4 className="font-semibold mb-3 flex items-center">
-                  <Target className="w-4 h-4 mr-2" />
-                  Daily Tasks
-                </h4>
-                <ul className="space-y-2">
-                  {step.tasks.map((task, taskIndex) => (
-                    <li key={taskIndex} className="flex items-start">
-                      <CheckCircle2 className="w-4 h-4 mr-2 mt-0.5 text-green-300" />
-                      <span className="text-sm">{task}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-[#2e2e5e] to-[#2e7cf6] bg-clip-text text-transparent">
+            🎌 Your BTCfi Investment Journey 🎌
+          </h2>
+          
+          {/* Step Navigation */}
+          <div className="flex items-center space-x-2">
+            {investmentSteps.map((step) => (
+              <div
+                key={step.id}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  completedSteps.includes(step.id) 
+                    ? 'bg-green-500' 
+                    : currentStep === step.id 
+                    ? 'bg-blue-500 ring-2 ring-blue-300' 
+                    : 'bg-gray-300'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
 
-              {/* Resources */}
-              <div className="bg-white/10 rounded-lg p-4">
-                <h4 className="font-semibold mb-3 flex items-center">
-                  <BookOpen className="w-4 h-4 mr-2" />
-                  Essential Resources
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {step.resources.map((resource, resourceIndex) => (
-                    <div key={resourceIndex} className="bg-white/20 rounded-lg p-3 flex items-center justify-between">
-                      <div>
-                        <h5 className="font-medium text-sm">{resource.title}</h5>
-                        <span className="text-xs text-white/70">{resource.type}</span>
-                      </div>
-                      <Button 
-                        size="sm" 
-                        variant="secondary" 
-                        className="bg-white/20 hover:bg-white/30 text-white border-white/30"
-                        onClick={() => window.open(resource.url, '_blank')}
-                      >
-                        <ExternalLink className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  ))}
+        {/* Current Step Display */}
+        {(() => {
+          const step = investmentSteps.find(s => s.id === currentStep);
+          if (!step) return null;
+          
+          return (
+            <Card 
+              className={`bg-gradient-to-r ${step.color} text-white overflow-hidden transition-all duration-500 ${
+                animatingStep === step.id ? 'animate-pulse' : ''
+              }`}
+            >
+              <CardHeader className="relative">
+                <div className="absolute top-0 right-0 text-6xl opacity-20">
+                  {step.emoji}
                 </div>
-              </div>
+                <CardTitle className="flex items-center text-white">
+                  <span className="bg-white text-purple-600 w-8 h-8 rounded-full flex items-center justify-center mr-3 font-bold">
+                    {step.id}
+                  </span>
+                  {step.title}
+                </CardTitle>
+                <p className="text-white/90 font-medium">{step.subtitle}</p>
+                <p className="text-white/80">{step.description}</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Tasks */}
+                <div className="bg-white/10 rounded-lg p-4">
+                  <h4 className="font-semibold mb-3 flex items-center">
+                    <Target className="w-4 h-4 mr-2" />
+                    Daily Tasks
+                  </h4>
+                  <ul className="space-y-2">
+                    {step.tasks.map((task, taskIndex) => (
+                      <li key={taskIndex} className="flex items-start">
+                        <CheckCircle2 className="w-4 h-4 mr-2 mt-0.5 text-green-300" />
+                        <span className="text-sm">{task}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-              {/* Action Button */}
-              <Button 
-                onClick={() => completeStep(step.id)}
-                className="w-full bg-white/20 hover:bg-white/30 text-white border border-white/30"
-                disabled={completedSteps.includes(step.id)}
-              >
-                {completedSteps.includes(step.id) ? (
-                  <>
-                    <CheckCircle2 className="w-4 h-4 mr-2" />
-                    Step Completed! ✨
-                  </>
-                ) : (
-                  <>
-                    <Star className="w-4 h-4 mr-2" />
-                    Start This Step
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+                {/* Resources */}
+                <div className="bg-white/10 rounded-lg p-4">
+                  <h4 className="font-semibold mb-3 flex items-center">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Essential Resources
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {step.resources.map((resource, resourceIndex) => (
+                      <div key={resourceIndex} className="bg-white/20 rounded-lg p-3 flex items-center justify-between">
+                        <div>
+                          <h5 className="font-medium text-sm">{resource.title}</h5>
+                          <span className="text-xs text-white/70">{resource.type}</span>
+                        </div>
+                        <Button 
+                          size="sm" 
+                          variant="secondary" 
+                          className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                          onClick={() => window.open(resource.url, '_blank')}
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Navigation Buttons */}
+                <div className="flex items-center justify-between space-x-4">
+                  {/* Previous Button */}
+                  <Button 
+                    onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
+                    className="bg-white/20 hover:bg-white/30 text-white border border-white/30"
+                    disabled={currentStep === 1}
+                  >
+                    ← Previous
+                  </Button>
+
+                  {/* Complete Step Button */}
+                  <Button 
+                    onClick={() => completeStep(step.id)}
+                    className="flex-1 bg-white/20 hover:bg-white/30 text-white border border-white/30"
+                    disabled={completedSteps.includes(step.id)}
+                  >
+                    {completedSteps.includes(step.id) ? (
+                      <>
+                        <CheckCircle2 className="w-4 h-4 mr-2" />
+                        Step Completed! ✨
+                      </>
+                    ) : (
+                      <>
+                        <Star className="w-4 h-4 mr-2" />
+                        Complete This Step
+                      </>
+                    )}
+                  </Button>
+
+                  {/* Next Button */}
+                  <Button 
+                    onClick={() => setCurrentStep(Math.min(4, currentStep + 1))}
+                    className="bg-white/20 hover:bg-white/30 text-white border border-white/30"
+                    disabled={currentStep === 4}
+                  >
+                    Next →
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })()}
       </div>
 
       {/* Protocol Showcase */}
