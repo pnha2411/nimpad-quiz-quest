@@ -27,7 +27,7 @@ export const WalletConnection: React.FC<WalletConnectionProps> = ({
     return (
       <Button onClick={onConnect} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
         <Wallet className="w-4 h-4 mr-2" />
-        Connect MetaMask
+        Connect Wallet
       </Button>
     );
   }
