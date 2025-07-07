@@ -9,7 +9,7 @@ import { infoWallet } from '@/hooks/useWallet';
 import nimpadLogo from '/nimpad_logo.jpg';
 
 const Index = () => {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'portfolio' | 'risk-assessment' | 'chatbot' | 'market-analysis' | 'protocols' | 'asset-wizard'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'portfolio' | 'chatbot'>('dashboard');
   
   // Always call hooks in the same order
   const { isConnected, account, connectWallet, disconnectWallet, isOnCitreaNetwork } = infoWallet();
@@ -45,16 +45,15 @@ const Index = () => {
               />
             </div>
           </div>
+          {/* Responsive Navigation */}
+          <div className="mt-4 w-full overflow-x-auto">
+            <Navigation 
+              currentView={currentView} 
+              setCurrentView={setCurrentView}
+            />
+          </div>
         </div>
       </header>
-
-      {/* Navigation */}
-      <div className="container mx-auto px-4 py-4">
-        <Navigation 
-          currentView={currentView} 
-          setCurrentView={setCurrentView}
-        />
-      </div>
 
       {/* Main Content */}
       <main>
@@ -67,34 +66,7 @@ const Index = () => {
             onClaimTokens={() => setCurrentView('portfolio')}
           />
         )}
-
-        {currentView === 'market-analysis' && (
-          <div className="container mx-auto px-4 pb-8">
-            <div className="bg-card rounded-xl p-6 border">
-              <h2 className="text-2xl font-bold mb-4">Market Analysis Suite</h2>
-              <p className="text-muted-foreground">Comprehensive BTCfi market analysis coming soon...</p>
-            </div>
-          </div>
-        )}
-
-        {currentView === 'protocols' && (
-          <div className="container mx-auto px-4 pb-8">
-            <div className="bg-card rounded-xl p-6 border">
-              <h2 className="text-2xl font-bold mb-4">Protocol Analytics</h2>
-              <p className="text-muted-foreground">Deep dive protocol analysis coming soon...</p>
-            </div>
-          </div>
-        )}
-
-        {currentView === 'asset-wizard' && (
-          <div className="container mx-auto px-4 pb-8">
-            <div className="bg-card rounded-xl p-6 border">
-              <h2 className="text-2xl font-bold mb-4">Asset Acquisition Wizard</h2>
-              <p className="text-muted-foreground">Step-by-step asset acquisition guide coming soon...</p>
-            </div>
-          </div>
-        )}
-
+        
         {currentView === 'chatbot' && (
           <div className="container mx-auto px-4 pb-8">
             <AIChatbot 
@@ -109,16 +81,7 @@ const Index = () => {
               onBack={() => setCurrentView('dashboard')}
             />
           </div>
-        )}
-
-        {currentView === 'risk-assessment' && (
-          <div className="container mx-auto px-4 pb-8">
-            <RiskAssessment 
-              onBack={() => setCurrentView('dashboard')}
-              onComplete={() => setCurrentView('dashboard')}
-            />
-          </div>
-        )}
+        )}      
       </main>
 
       {/* Footer */}
