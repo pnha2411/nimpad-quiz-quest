@@ -233,33 +233,35 @@ export const usePortfolio = () => {
     }
   };
 
-  // Get portfolio recommendations based on risk profile
+  // Get portfolio recommendations based on risk profile - Updated for CoreDAO
   const getPortfolioRecommendations = (riskScore: number) => {
     const recommendations = {
       conservative: {
         allocations: {
-          'Babylon Staking': 60,
-          'Lightning Pool': 30,
-          'Stacks DeFi': 10
+          'Colend': 50,
+          'Core Staking': 35,
+          'SolvBTC': 15
         },
-        description: 'Conservative allocation focusing on stable yields'
+        description: 'Conservative allocation focusing on stable CoreDAO yields'
       },
       balanced: {
         allocations: {
-          'Babylon Staking': 40,
-          'Lightning Pool': 35,
-          'Stacks DeFi': 20,
-          'Rootstock Bridge': 5
+          'Colend': 30,
+          'Core Staking': 25,
+          'BIMA': 20,
+          'NLX': 15,
+          'SolvBTC': 10
         },
-        description: 'Balanced approach with moderate risk and returns'
+        description: 'Balanced CoreDAO DeFi approach with moderate risk and returns'
       },
       aggressive: {
         allocations: {
-          'Lightning Pool': 30,
-          'Stacks DeFi': 40,
-          'Rootstock Bridge': 30
+          'BIMA': 35,
+          'Glyph Exchange': 25,
+          'NLX': 20,
+          'Core Staking': 20
         },
-        description: 'Higher risk allocation for maximum potential returns'
+        description: 'Higher risk CoreDAO DeFi allocation for maximum potential returns'
       }
     };
 

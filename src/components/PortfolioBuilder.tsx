@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, PieChart, TrendingUp, Shield, Zap } from 'lucide-react';
 import { usePortfolio, Portfolio } from '@/hooks/usePortfolio';
+import { CoreDAOPortfolioAnalyzer } from '@/components/CoreDAOPortfolioAnalyzer';
 
 interface PortfolioBuilderProps {
   onBack: () => void;
@@ -18,6 +19,11 @@ export const PortfolioBuilder: React.FC<PortfolioBuilderProps> = ({ onBack }) =>
   const [customAllocations, setCustomAllocations] = useState<Record<string, number>>({});
   const [selectedTemplate, setSelectedTemplate] = useState<'conservative' | 'balanced' | 'aggressive' | 'custom'>('balanced');
   const [isCreating, setIsCreating] = useState(false);
+  const [showAnalyzer, setShowAnalyzer] = useState(false);
+
+  if (showAnalyzer) {
+    return <CoreDAOPortfolioAnalyzer onBack={() => setShowAnalyzer(false)} />;
+  }
 
   const riskScore = riskProfile?.risk_tolerance || 5;
   const recommendations = getPortfolioRecommendations(riskScore);
@@ -96,12 +102,19 @@ export const PortfolioBuilder: React.FC<PortfolioBuilderProps> = ({ onBack }) =>
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
         </Button>
-        <div>
+        <div className="flex-1">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             Portfolio Builder
           </h1>
           <p className="text-muted-foreground">Create your personalized BTCFi portfolio</p>
         </div>
+        <Button 
+          onClick={() => setShowAnalyzer(true)}
+          variant="outline"
+          className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-none hover:opacity-90"
+        >
+          CoreDAO AI Analyzer
+        </Button>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
