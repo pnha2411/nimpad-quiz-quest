@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { WalletConnection } from '@/components/WalletConnection';
-import { Dashboard } from '@/components/Dashboard';
+import { SimpleDashboard } from '@/components/SimpleDashboard';
 import { AIChatbot } from '@/components/AIChatbot';
 import { Navigation } from '@/components/Navigation';
 import { PortfolioBuilder } from '@/components/PortfolioBuilder';
 import { RiskAssessment } from '@/components/RiskAssessment';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { infoWallet } from '@/hooks/useWallet';
 import nimpadLogo from '/nimpad_logo.jpg';
 
@@ -22,122 +24,122 @@ const Index = () => {
   }, [isConnected, account]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#e3eafc] via-[#f7f6fa] to-[#e3eafc]">
-      {/* Header */}
-      <header className="border-b border-border bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            {/* Left: Logo and Title */}
-            <div className="flex items-center space-x-3 min-w-0">
+    <div className="min-h-screen bg-background">
+      {/* Simplified Header */}
+      <header className="border-b bg-card/50 backdrop-blur sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            {/* Logo and Title */}
+            <div className="flex items-center space-x-3">
               <img
                 src={nimpadLogo}
-                alt="Nimpad Logo"
-                className="w-10 h-10 rounded-xl shadow-lg border-4 border-white bg-white animate-float"
-                style={{ objectFit: 'cover' }}
+                alt="Nimpad"
+                className="w-8 h-8 rounded-lg"
               />
-              <span className="text-sm text-[#4b4b6b] hidden sm:inline font-medium truncate">BTCfi Investment Tracker</span>
+              <h1 className="text-lg font-semibold text-foreground">Core DAO Builder</h1>
             </div>
-            {/* Center: Navigation */}
-            <div className="flex-1 flex justify-center min-w-0">
+            
+            {/* Simple Navigation */}
+            {isConnected && (
               <Navigation 
                 currentView={currentView} 
                 setCurrentView={setCurrentView}
               />
-            </div>
-            {/* Right: Wallet Connection */}
-            <div className="flex items-center space-x-4 min-w-0 justify-end">
-              <WalletConnection 
-                isConnected={isConnected}
-                account={account}
-                onConnect={connectWallet}
-                onDisconnect={disconnectWallet}
-              />
-            </div>
+            )}
+            
+            {/* Wallet Connection */}
+            <WalletConnection 
+              isConnected={isConnected}
+              account={account}
+              onConnect={connectWallet}
+              onDisconnect={disconnectWallet}
+            />
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main>
-        {currentView === 'dashboard' && (
-          <Dashboard 
-            points={0}
-            completedQuizzes={0}
-            totalQuizzes={10}
-            onStartQuiz={() => setCurrentView('portfolio')}
-            onClaimTokens={() => setCurrentView('portfolio')}
-          />
-        )}
-        
-        {currentView === 'chatbot' && (
-          <div className="container mx-auto px-4 pb-8">
-            <AIChatbot 
-              onBack={() => setCurrentView('dashboard')}
-            />
+      <main className="container mx-auto px-4 py-8">
+        {!isConnected ? (
+          // Welcome Screen - First Time User Experience
+          <div className="max-w-2xl mx-auto text-center space-y-8">
+            <div className="space-y-4">
+              <h2 className="text-3xl font-bold text-foreground">Welcome to Core DAO Builder</h2>
+              <p className="text-muted-foreground text-lg">
+                Your all-in-one platform to learn, build, and earn in the Core DAO ecosystem
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6 my-12">
+              <Card className="text-center p-6 hover:shadow-lg transition-shadow">
+                <div className="text-4xl mb-4">🎯</div>
+                <h3 className="font-semibold mb-2">Learn</h3>
+                <p className="text-sm text-muted-foreground">Master Core DAO development with guided tutorials</p>
+              </Card>
+              <Card className="text-center p-6 hover:shadow-lg transition-shadow">
+                <div className="text-4xl mb-4">🚀</div>
+                <h3 className="font-semibold mb-2">Build</h3>
+                <p className="text-sm text-muted-foreground">Create dApps with AI assistance and tools</p>
+              </Card>
+              <Card className="text-center p-6 hover:shadow-lg transition-shadow">
+                <div className="text-4xl mb-4">💎</div>
+                <h3 className="font-semibold mb-2">Earn</h3>
+                <p className="text-sm text-muted-foreground">Optimize yields with portfolio analysis</p>
+              </Card>
+            </div>
+            
+            <div className="space-y-4">
+              <Button size="lg" onClick={connectWallet} className="w-full max-w-md">
+                Connect Wallet to Get Started
+              </Button>
+              <p className="text-sm text-muted-foreground">
+                Connect your wallet to access all features
+              </p>
+            </div>
           </div>
-        )}
+        ) : (
+          // Connected User Experience
+          <>
+            {currentView === 'dashboard' && (
+              <SimpleDashboard 
+                points={0}
+                completedQuizzes={0}
+                totalQuizzes={10}
+                onStartQuiz={() => setCurrentView('portfolio')}
+                onClaimTokens={() => setCurrentView('portfolio')}
+              />
+            )}
+            
+            {currentView === 'chatbot' && (
+              <AIChatbot 
+                onBack={() => setCurrentView('dashboard')}
+              />
+            )}
 
-        {currentView === 'portfolio' && (
-          <div className="container mx-auto px-4 pb-8">
-            <PortfolioBuilder 
-              onBack={() => setCurrentView('dashboard')}
-            />
-          </div>
+            {currentView === 'portfolio' && (
+              <PortfolioBuilder 
+                onBack={() => setCurrentView('dashboard')}
+              />
+            )}
+          </>
         )}      
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-white/70 backdrop-blur-md">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <img
-                  src={nimpadLogo}
-                  alt="Nimpad Logo"
-                  className="w-7 h-7 rounded-lg shadow border-2 border-white bg-white"
-                  style={{ objectFit: 'cover' }}
-                />
-                <span className="font-bold text-lg text-[#2e2e5e]">Nimpad</span>
+      {/* Minimal Footer */}
+      {isConnected && (
+        <footer className="border-t bg-card/30 mt-auto">
+          <div className="container mx-auto px-4 py-6">
+            <div className="flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
+              <p>Built for Core DAO Ecosystem</p>
+              <div className="flex space-x-4 mt-2 md:mt-0">
+                <a href="https://docs.coredao.org" className="hover:text-primary">Docs</a>
+                <a href="https://discord.com/invite/coredaoofficial" className="hover:text-primary">Discord</a>
+                <a href="https://github.com/coredao-org" className="hover:text-primary">GitHub</a>
               </div>
-              <p className="text-[#4b4b6b] text-sm">
-                The ultimate BTCfi investment tracker for smart Bitcoin DeFi investors.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Track</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">Portfolio</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Yield Opportunities</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Risk Assessment</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Optimize</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">AI Recommendations</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Auto Rebalancing</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Performance Analytics</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Community</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="https://t.me/btcfi_builders" className="hover:text-primary transition-colors">Telegram</a></li>
-                <li><a href="https://x.com/nxNim9" className="hover:text-primary transition-colors">Twitter</a></li>
-              </ul>
             </div>
           </div>
-          <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-[#4b4b6b]">
-            <div className="flex items-center space-x-4 mb-4 md:mb-0">
-              <span>Built for Bitcoin Layer 2 Ecosystem</span>
-            </div>
-            <div className="text-center md:text-right">
-              <p>Track • Optimize • Grow • Scale</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 };
