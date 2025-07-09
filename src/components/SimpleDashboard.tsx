@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle2, Clock, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Clock, ArrowRight, ChevronDown, ChevronUp, ExternalLink, Target, BookOpen } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Badge } from '@/components/ui/badge';
 
 interface SimpleDashboardProps {
   points: number;
@@ -15,15 +17,96 @@ interface SimpleDashboardProps {
 export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
   onStartQuiz,
 }) => {
-  // PRESERVE ALL DAILY HABITS FUNCTIONALITY
+  // PRESERVE ALL DAILY HABITS FUNCTIONALITY WITH DETAILED STEPS
   const [dailyHabits, setDailyHabits] = useState([
-    { id: 1, title: "Morning Market Analysis", completed: false, streak: 3 },
-    { id: 2, title: "Protocol Research", completed: true, streak: 7 },
-    { id: 3, title: "Portfolio Review", completed: false, streak: 2 },
-    { id: 4, title: "Risk Assessment", completed: true, streak: 5 }
+    { 
+      id: 1, 
+      title: "🔍 Market Analysis", 
+      subtitle: "Fundamental, Technical & On-Chain Analysis",
+      completed: false, 
+      streak: 3,
+      description: "Master the art of reading the BTCfi market like a skilled strategist",
+      tasks: [
+        "Check total TVL across all BTCfi protocols",
+        "Analyze Bitcoin price correlation with BTCfi tokens",
+        "Review on-chain metrics: active addresses, transaction volume",
+        "Study institutional Bitcoin adoption trends"
+      ],
+      resources: [
+        { title: "DeFiLlama Yield Analytics", url: "https://defillama.com/yields", type: "Analytics" },
+        { title: "CoinGecko BTCfi Sector", url: "https://www.coingecko.com/en/categories/bitcoin-layer-2", type: "Data" },
+        { title: "Dune Analytics BTCfi Dashboard", url: "https://dune.com/browse/dashboards", type: "On-Chain" },
+        { title: "BitcoinLayers.org", url: "https://bitcoinlayers.org/", type: "Infrastructure" }
+      ]
+    },
+    { 
+      id: 2, 
+      title: "⚡ Protocol Deep Dive", 
+      subtitle: "Yield Analysis & Chain Performance",
+      completed: true, 
+      streak: 7,
+      description: "Discover the most promising protocols across different chains",
+      tasks: [
+        "Compare APY rates across major BTCfi protocols",
+        "Analyze liquidity depth and trading volume",
+        "Check protocol security audits and track record",
+        "Review governance token tokenomics"
+      ],
+      resources: [
+        { title: "Core Chain Explorer", url: "https://scan.coredao.org/", type: "Explorer" },
+        { title: "Rootstock (RSK) DeFi", url: "https://rootstock.io/", type: "Platform" },
+        { title: "BOB Network", url: "https://gobob.xyz/", type: "L2" },
+        { title: "Babylon Protocol", url: "https://babylonchain.io/", type: "Staking" },
+        { title: "Stacks Ecosystem", url: "https://www.stacks.co/", type: "Smart Contracts" }
+      ]
+    },
+    { 
+      id: 3, 
+      title: "💰 Asset Acquisition", 
+      subtitle: "Step-by-Step Investment Process",
+      completed: false, 
+      streak: 2,
+      description: "Your complete guide to acquiring BTCfi assets safely",
+      tasks: [
+        "Set up secure wallet (MetaMask/Rabby)",
+        "Add BTCfi network configurations",
+        "Acquire base assets (BTC, ETH, USDT)",
+        "Bridge assets to chosen BTCfi chains",
+        "Start with small test transactions"
+      ],
+      resources: [
+        { title: "Binance BTCfi Trading", url: "https://www.binance.com/", type: "CEX" },
+        { title: "Uniswap V3", url: "https://app.uniswap.org/", type: "DEX" },
+        { title: "1inch Aggregator", url: "https://1inch.io/", type: "DEX Aggregator" },
+        { title: "MetaMask Wallet", url: "https://metamask.io/", type: "Wallet" },
+        { title: "Rabby Wallet", url: "https://rabby.io/", type: "Multi-Chain Wallet" }
+      ]
+    },
+    { 
+      id: 4, 
+      title: "📊 Portfolio Monitoring", 
+      subtitle: "Track & Optimize Your Positions",
+      completed: true, 
+      streak: 5,
+      description: "Keep your investments performing at their best",
+      tasks: [
+        "Set up portfolio tracking dashboard",
+        "Monitor yield farming rewards daily",
+        "Track impermanent loss on LP positions",
+        "Review and rebalance monthly",
+        "Set up price alerts for major moves"
+      ],
+      resources: [
+        { title: "DeBank Portfolio Tracker", url: "https://debank.com/", type: "Portfolio" },
+        { title: "Zapper.fi", url: "https://zapper.fi/", type: "DeFi Portfolio" },
+        { title: "Apeboard", url: "https://apeboard.finance/", type: "Multi-Chain" },
+        { title: "CoinTracker", url: "https://www.cointracker.io/", type: "Tax Tracking" }
+      ]
+    }
   ]);
 
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [expandedHabits, setExpandedHabits] = useState<Record<number, boolean>>({});
 
   // Load progress from localStorage on mount - PRESERVE FUNCTIONALITY
   useEffect(() => {
@@ -61,6 +144,13 @@ export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
     );
   };
 
+  const toggleExpanded = (habitId: number) => {
+    setExpandedHabits(prev => ({
+      ...prev,
+      [habitId]: !prev[habitId]
+    }));
+  };
+
   const completedHabitsCount = dailyHabits.filter(h => h.completed).length;
   const totalProgress = (completedSteps.length + completedHabitsCount) / 8 * 100;
 
@@ -94,34 +184,93 @@ export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
         </Card>
       </div>
 
-      {/* Daily Habits - PRESERVED ORIGINAL FUNCTIONALITY */}
+      {/* Daily Habits - PRESERVED ORIGINAL FUNCTIONALITY WITH DETAILED CONTENT */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            Daily BTCfi Habits
+            🎌 Your BTCfi Investment Journey 🎌
             <span className="text-sm font-normal text-muted-foreground">{completedHabitsCount}/4 completed</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {dailyHabits.map((habit) => (
-              <div 
-                key={habit.id} 
-                className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 cursor-pointer"
-                onClick={() => toggleHabit(habit.id)}
-              >
-                <div className="flex items-center gap-3">
-                  {habit.completed ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  ) : (
-                    <Clock className="w-5 h-5 text-muted-foreground" />
-                  )}
-                  <div>
-                    <div className="font-medium">{habit.title}</div>
-                    <div className="text-sm text-muted-foreground">🔥 {habit.streak} day streak</div>
+              <Collapsible key={habit.id} open={expandedHabits[habit.id]} onOpenChange={() => toggleExpanded(habit.id)}>
+                <div className="border rounded-lg">
+                  {/* Habit Header */}
+                  <div 
+                    className="flex items-center justify-between p-4 hover:bg-muted/50 cursor-pointer"
+                    onClick={() => toggleHabit(habit.id)}
+                  >
+                    <div className="flex items-center gap-3">
+                      {habit.completed ? (
+                        <CheckCircle2 className="w-5 h-5 text-green-500" />
+                      ) : (
+                        <Clock className="w-5 h-5 text-muted-foreground" />
+                      )}
+                      <div>
+                        <div className="font-medium">{habit.title}</div>
+                        <div className="text-sm text-muted-foreground">{habit.subtitle}</div>
+                        <div className="text-xs text-muted-foreground">🔥 {habit.streak} day streak</div>
+                      </div>
+                    </div>
+                    <CollapsibleTrigger asChild>
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); toggleExpanded(habit.id); }}>
+                        {expandedHabits[habit.id] ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      </Button>
+                    </CollapsibleTrigger>
                   </div>
+                  
+                  {/* Expanded Content */}
+                  <CollapsibleContent>
+                    <div className="px-4 pb-4 space-y-4 border-t bg-muted/20">
+                      <p className="text-sm text-muted-foreground mt-4">{habit.description}</p>
+                      
+                      {/* Tasks */}
+                      <div>
+                        <h4 className="font-medium mb-2 flex items-center text-sm">
+                          <Target className="w-4 h-4 mr-2" />
+                          Daily Tasks
+                        </h4>
+                        <ul className="space-y-1">
+                          {habit.tasks.map((task, taskIndex) => (
+                            <li key={taskIndex} className="flex items-start text-sm">
+                              <CheckCircle2 className="w-3 h-3 mr-2 mt-0.5 text-green-500 flex-shrink-0" />
+                              <span>{task}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Resources */}
+                      <div>
+                        <h4 className="font-medium mb-2 flex items-center text-sm">
+                          <BookOpen className="w-4 h-4 mr-2" />
+                          Essential Resources
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {habit.resources.map((resource, resourceIndex) => (
+                            <div key={resourceIndex} className="flex items-center justify-between p-2 bg-background rounded border">
+                              <div>
+                                <div className="text-sm font-medium">{resource.title}</div>
+                                <Badge variant="outline" className="text-xs">{resource.type}</Badge>
+                              </div>
+                              <Button 
+                                size="sm" 
+                                variant="ghost"
+                                className="p-1"
+                                onClick={() => window.open(resource.url, '_blank')}
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </CollapsibleContent>
                 </div>
-              </div>
+              </Collapsible>
             ))}
           </div>
         </CardContent>
