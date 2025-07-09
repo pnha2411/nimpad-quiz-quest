@@ -195,82 +195,88 @@ export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
         <CardContent>
           <div className="space-y-4">
             {dailyHabits.map((habit) => (
-              <Collapsible key={habit.id} open={expandedHabits[habit.id]} onOpenChange={() => toggleExpanded(habit.id)}>
-                <div className="border rounded-lg">
-                  {/* Habit Header */}
+              <div key={habit.id} className="border rounded-lg">
+                {/* Habit Header - Always Visible */}
+                <div className="flex items-center justify-between p-4">
                   <div 
-                    className="flex items-center justify-between p-4 hover:bg-muted/50 cursor-pointer"
+                    className="flex items-center gap-3 flex-1 cursor-pointer hover:opacity-80"
                     onClick={() => toggleHabit(habit.id)}
                   >
-                    <div className="flex items-center gap-3">
-                      {habit.completed ? (
-                        <CheckCircle2 className="w-5 h-5 text-green-500" />
-                      ) : (
-                        <Clock className="w-5 h-5 text-muted-foreground" />
-                      )}
-                      <div>
-                        <div className="font-medium">{habit.title}</div>
-                        <div className="text-sm text-muted-foreground">{habit.subtitle}</div>
-                        <div className="text-xs text-muted-foreground">🔥 {habit.streak} day streak</div>
-                      </div>
+                    {habit.completed ? (
+                      <CheckCircle2 className="w-5 h-5 text-green-500" />
+                    ) : (
+                      <Clock className="w-5 h-5 text-muted-foreground" />
+                    )}
+                    <div>
+                      <div className="font-medium">{habit.title}</div>
+                      <div className="text-sm text-muted-foreground">{habit.subtitle}</div>
+                      <div className="text-xs text-muted-foreground">🔥 {habit.streak} day streak</div>
                     </div>
-                    <CollapsibleTrigger asChild>
-                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); toggleExpanded(habit.id); }}>
-                        {expandedHabits[habit.id] ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                      </Button>
-                    </CollapsibleTrigger>
                   </div>
                   
-                  {/* Expanded Content */}
-                  <CollapsibleContent>
-                    <div className="px-4 pb-4 space-y-4 border-t bg-muted/20">
-                      <p className="text-sm text-muted-foreground mt-4">{habit.description}</p>
-                      
-                      {/* Tasks */}
-                      <div>
-                        <h4 className="font-medium mb-2 flex items-center text-sm">
-                          <Target className="w-4 h-4 mr-2" />
-                          Daily Tasks
-                        </h4>
-                        <ul className="space-y-1">
-                          {habit.tasks.map((task, taskIndex) => (
-                            <li key={taskIndex} className="flex items-start text-sm">
-                              <CheckCircle2 className="w-3 h-3 mr-2 mt-0.5 text-green-500 flex-shrink-0" />
-                              <span>{task}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Resources */}
-                      <div>
-                        <h4 className="font-medium mb-2 flex items-center text-sm">
-                          <BookOpen className="w-4 h-4 mr-2" />
-                          Essential Resources
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                          {habit.resources.map((resource, resourceIndex) => (
-                            <div key={resourceIndex} className="flex items-center justify-between p-2 bg-background rounded border">
-                              <div>
-                                <div className="text-sm font-medium">{resource.title}</div>
-                                <Badge variant="outline" className="text-xs">{resource.type}</Badge>
-                              </div>
-                              <Button 
-                                size="sm" 
-                                variant="ghost"
-                                className="p-1"
-                                onClick={() => window.open(resource.url, '_blank')}
-                              >
-                                <ExternalLink className="w-3 h-3" />
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => toggleExpanded(habit.id)}
+                    className="ml-2"
+                  >
+                    {expandedHabits[habit.id] ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  </Button>
+                </div>
+                
+                {/* Expanded Content - Only show when expanded */}
+                {expandedHabits[habit.id] && (
+                  <div className="px-4 pb-4 space-y-4 border-t bg-muted/20">
+                    <p className="text-sm text-muted-foreground pt-4">{habit.description}</p>
+                    
+                    {/* Daily Tasks Section */}
+                    <div>
+                      <h4 className="font-medium mb-3 flex items-center text-sm">
+                        <Target className="w-4 h-4 mr-2 text-primary" />
+                        Daily Tasks
+                      </h4>
+                      <div className="space-y-2">
+                        {habit.tasks.map((task, taskIndex) => (
+                          <div key={taskIndex} className="flex items-start text-sm p-2 bg-background rounded border">
+                            <CheckCircle2 className="w-4 h-4 mr-2 mt-0.5 text-green-500 flex-shrink-0" />
+                            <span>{task}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </CollapsibleContent>
-                </div>
-              </Collapsible>
+
+                    {/* Essential Resources Section */}
+                    <div>
+                      <h4 className="font-medium mb-3 flex items-center text-sm">
+                        <BookOpen className="w-4 h-4 mr-2 text-primary" />
+                        Essential Resources
+                      </h4>
+                      <div className="grid grid-cols-1 gap-2">
+                        {habit.resources.map((resource, resourceIndex) => (
+                          <div key={resourceIndex} className="flex items-center justify-between p-3 bg-background rounded border hover:bg-muted/50 transition-colors">
+                            <div className="flex-1">
+                              <div className="text-sm font-medium">{resource.title}</div>
+                              <div className="flex items-center gap-2 mt-1">
+                                <Badge variant="secondary" className="text-xs">
+                                  {resource.type}
+                                </Badge>
+                              </div>
+                            </div>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="ml-2"
+                              onClick={() => window.open(resource.url, '_blank', 'noopener,noreferrer')}
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </CardContent>
