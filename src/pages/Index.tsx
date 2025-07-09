@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { WalletConnection } from '@/components/WalletConnection';
 import { Dashboard } from '@/components/Dashboard';
+import { SimpleDashboard } from '@/components/SimpleDashboard';
 import { AIChatbot } from '@/components/AIChatbot';
 import { Navigation } from '@/components/Navigation';
 import { PortfolioBuilder } from '@/components/PortfolioBuilder';
@@ -22,30 +23,27 @@ const Index = () => {
   }, [isConnected, account]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#e3eafc] via-[#f7f6fa] to-[#e3eafc]">
-      {/* Header */}
-      <header className="border-b border-border bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            {/* Left: Logo and Title */}
-            <div className="flex items-center space-x-3 min-w-0">
+    <div className="min-h-screen bg-background">
+      {/* Minimal Header */}
+      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center space-x-2">
               <img
                 src={nimpadLogo}
-                alt="Nimpad Logo"
-                className="w-10 h-10 rounded-xl shadow-lg border-4 border-white bg-white animate-float"
-                style={{ objectFit: 'cover' }}
+                alt="Nimpad"
+                className="w-8 h-8 rounded-lg"
               />
-              <span className="text-sm text-[#4b4b6b] hidden sm:inline font-medium truncate">BTCfi Investment Tracker</span>
+              <span className="font-semibold text-foreground">Nimpad</span>
             </div>
-            {/* Center: Navigation */}
-            <div className="flex-1 flex justify-center min-w-0">
+            
+            {/* Navigation & Wallet in one row */}
+            <div className="flex items-center space-x-4">
               <Navigation 
                 currentView={currentView} 
                 setCurrentView={setCurrentView}
               />
-            </div>
-            {/* Right: Wallet Connection */}
-            <div className="flex items-center space-x-4 min-w-0 justify-end">
               <WalletConnection 
                 isConnected={isConnected}
                 account={account}
@@ -58,9 +56,18 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main>
-        {currentView === 'dashboard' && (
-          <Dashboard 
+      <main className="container mx-auto px-4 py-6">
+        {!isConnected && currentView === 'dashboard' && (
+          <div className="text-center py-12">
+            <img src={nimpadLogo} alt="Nimpad" className="w-16 h-16 mx-auto mb-4 rounded-xl" />
+            <h1 className="text-3xl font-bold mb-2">Welcome to Nimpad</h1>
+            <p className="text-muted-foreground mb-6">Your BTCfi Investment Tracker</p>
+            <p className="text-sm text-muted-foreground">Connect your wallet to get started</p>
+          </div>
+        )}
+        
+        {isConnected && currentView === 'dashboard' && (
+          <SimpleDashboard 
             points={0}
             completedQuizzes={0}
             totalQuizzes={10}
@@ -70,70 +77,29 @@ const Index = () => {
         )}
         
         {currentView === 'chatbot' && (
-          <div className="container mx-auto px-4 pb-8">
-            <AIChatbot 
-              onBack={() => setCurrentView('dashboard')}
-            />
-          </div>
+          <AIChatbot 
+            onBack={() => setCurrentView('dashboard')}
+          />
         )}
 
         {currentView === 'portfolio' && (
-          <div className="container mx-auto px-4 pb-8">
-            <PortfolioBuilder 
-              onBack={() => setCurrentView('dashboard')}
-            />
-          </div>
+          <PortfolioBuilder 
+            onBack={() => setCurrentView('dashboard')}
+          />
         )}      
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-white/70 backdrop-blur-md">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <img
-                  src={nimpadLogo}
-                  alt="Nimpad Logo"
-                  className="w-7 h-7 rounded-lg shadow border-2 border-white bg-white"
-                  style={{ objectFit: 'cover' }}
-                />
-                <span className="font-bold text-lg text-[#2e2e5e]">Nimpad</span>
-              </div>
-              <p className="text-[#4b4b6b] text-sm">
-                The ultimate BTCfi investment tracker for smart Bitcoin DeFi investors.
-              </p>
+      {/* Minimal Footer */}
+      <footer className="border-t mt-12">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row items-center justify-between text-sm text-muted-foreground">
+            <div className="flex items-center space-x-2 mb-2 md:mb-0">
+              <img src={nimpadLogo} alt="Nimpad" className="w-5 h-5 rounded" />
+              <span>Nimpad - BTCfi Investment Tracker</span>
             </div>
-            <div>
-              <h4 className="font-semibold mb-4">Track</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">Portfolio</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Yield Opportunities</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Risk Assessment</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Optimize</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">AI Recommendations</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Auto Rebalancing</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Performance Analytics</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Community</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="https://t.me/btcfi_builders" className="hover:text-primary transition-colors">Telegram</a></li>
-                <li><a href="https://x.com/nxNim9" className="hover:text-primary transition-colors">Twitter</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-[#4b4b6b]">
-            <div className="flex items-center space-x-4 mb-4 md:mb-0">
-              <span>Built for Bitcoin Layer 2 Ecosystem</span>
-            </div>
-            <div className="text-center md:text-right">
-              <p>Track • Optimize • Grow • Scale</p>
+            <div className="flex items-center space-x-4">
+              <a href="https://t.me/btcfi_builders" className="hover:text-foreground transition-colors">Telegram</a>
+              <a href="https://x.com/nxNim9" className="hover:text-foreground transition-colors">Twitter</a>
             </div>
           </div>
         </div>
