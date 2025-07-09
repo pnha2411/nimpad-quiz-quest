@@ -11,20 +11,11 @@ import nimpadLogo from '/nimpad_logo.jpg';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<'dashboard' | 'portfolio' | 'chatbot'>('dashboard');
-  
-  // Always call hooks in the same order
   const { isConnected, account, connectWallet, disconnectWallet, isOnCitreaNetwork } = infoWallet();
-
-  // Redirect to dashboard when wallet is successfully connected
-  useEffect(() => {
-    if (isConnected && account) {
-      setCurrentView('dashboard');
-    }
-  }, [isConnected, account]);
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Minimal Header */}
+      {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
@@ -37,7 +28,6 @@ const Index = () => {
               />
               <span className="font-semibold text-foreground">Nimpad</span>
             </div>
-            
             {/* Navigation & Wallet in one row */}
             <div className="flex items-center space-x-4">
               <Navigation 
@@ -57,16 +47,8 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-6">
-        {!isConnected && currentView === 'dashboard' && (
-          <div className="text-center py-12">
-            <img src={nimpadLogo} alt="Nimpad" className="w-16 h-16 mx-auto mb-4 rounded-xl" />
-            <h1 className="text-3xl font-bold mb-2">Welcome to Nimpad</h1>
-            <p className="text-muted-foreground mb-6">Your BTCfi Investment Tracker</p>
-            <p className="text-sm text-muted-foreground">Connect your wallet to get started</p>
-          </div>
-        )}
-        
-        {isConnected && currentView === 'dashboard' && (
+        {/* Always show dashboard by default, even if wallet is not connected */}
+        {currentView === 'dashboard' && (
           <SimpleDashboard 
             points={0}
             completedQuizzes={0}
