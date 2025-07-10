@@ -236,7 +236,7 @@ export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
                         Daily Tasks
                       </h4>
                       <div className="space-y-2">
-                        {habit.tasks.map((task, taskIndex) => (
+                        {(habit.tasks || []).map((task, taskIndex) => (
                           <div key={taskIndex} className="flex items-start text-sm p-2 bg-background rounded border">
                             <CheckCircle2 className="w-4 h-4 mr-2 mt-0.5 text-green-500 flex-shrink-0" />
                             <span>{task}</span>
@@ -252,7 +252,7 @@ export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
                         Essential Resources
                       </h4>
                       <div className="grid grid-cols-1 gap-2">
-                        {habit.resources.map((resource, resourceIndex) => (
+                        {(habit.resources || []).map((resource, resourceIndex) => (
                           <div key={resourceIndex} className="flex items-center justify-between p-3 bg-background rounded border hover:bg-muted/50 transition-colors">
                             <div className="flex-1">
                               <div className="text-sm font-medium">{resource.title}</div>
