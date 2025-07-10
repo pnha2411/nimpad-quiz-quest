@@ -32,7 +32,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [dailyHabits, setDailyHabits] = useState([
-    { id: 1, title: "Morning Market Analysis", completed: false, streak: 3 },
+    { id: 1, title: "Market Analysis", completed: false, streak: 3 },
     { id: 2, title: "Protocol Research", completed: true, streak: 7 },
     { id: 3, title: "Portfolio Review", completed: false, streak: 2 },
     { id: 4, title: "Risk Assessment", completed: true, streak: 5 }
