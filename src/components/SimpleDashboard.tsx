@@ -29,6 +29,8 @@ export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
       tasks: [
         "Check total TVL across all BTCfi protocols",
         "Analyze Bitcoin price correlation with BTCfi tokens",
+        "Scan TradingView daily chart to estimate price range for liquidity positions",
+        "Analyze technical charts to identify effective BTCfi tokens for investment",
         "Review on-chain metrics: active addresses, transaction volume",
         "Study institutional Bitcoin adoption trends"
       ],
