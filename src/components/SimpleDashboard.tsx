@@ -37,6 +37,8 @@ export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
       resources: [
         { title: "DeFiLlama Yield Analytics", url: "https://defillama.com/yields", type: "Analytics" },
         { title: "CoinGecko BTCfi Sector", url: "https://www.coingecko.com/en/categories/bitcoin-layer-2", type: "Data" },
+        { title: "TradingView BTC Chart", url: "https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSDT", type: "Chart Analysis" },
+        { title: "TradingView CORE Chart", url: "https://www.tradingview.com/chart/?symbol=BINANCE:COREUSDT", type: "Chart Analysis" },
         { title: "Dune Analytics BTCfi Dashboard", url: "https://dune.com/browse/dashboards", type: "On-Chain" },
         { title: "BitcoinLayers.org", url: "https://bitcoinlayers.org/", type: "Infrastructure" }
       ]
@@ -276,6 +278,40 @@ export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
                         ))}
                       </div>
                     </div>
+
+                    {/* Chart Analytics Section - Only for Market Analysis */}
+                    {habit.id === 1 && (
+                      <div>
+                        <h4 className="font-medium mb-3 flex items-center text-sm">
+                          <Target className="w-4 h-4 mr-2 text-primary" />
+                          Chart Analytics Preview
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="bg-background rounded border p-3">
+                            <div className="text-xs text-muted-foreground mb-2">BTC/USDT Daily Chart</div>
+                            <img 
+                              src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=200&fit=crop&crop=center" 
+                              alt="BTC Chart Analysis" 
+                              className="w-full h-24 object-cover rounded"
+                            />
+                            <div className="text-xs mt-2 text-muted-foreground">
+                              Support: $95,000 | Resistance: $108,000
+                            </div>
+                          </div>
+                          <div className="bg-background rounded border p-3">
+                            <div className="text-xs text-muted-foreground mb-2">CORE/USDT Analysis</div>
+                            <img 
+                              src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=400&h=200&fit=crop&crop=center" 
+                              alt="CORE Chart Analysis" 
+                              className="w-full h-24 object-cover rounded"
+                            />
+                            <div className="text-xs mt-2 text-muted-foreground">
+                              Trend: Bullish | Entry: $1.20-$1.35
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
