@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { WalletConnection } from '@/components/WalletConnection';
-import { Dashboard } from '@/components/Dashboard';
 import { SimpleDashboard } from '@/components/SimpleDashboard';
 import { AIChatbot } from '@/components/AIChatbot';
 import { Navigation } from '@/components/Navigation';

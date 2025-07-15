@@ -37,8 +37,8 @@ export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
       resources: [
         { title: "DeFiLlama Yield Analytics", url: "https://defillama.com/yields", type: "Analytics" },
         { title: "CoinGecko BTCfi Sector", url: "https://www.coingecko.com/en/categories/bitcoin-layer-2", type: "Data" },
-        { title: "TradingView BTC Chart", url: "https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSDT", type: "Chart Analysis" },
-        { title: "TradingView CORE Chart", url: "https://www.tradingview.com/chart/?symbol=BINANCE:COREUSDT", type: "Chart Analysis" },
+        { title: "TradingView BTC Chart", url: "https://www.in.tradingview.com/chart/?symbol=BINANCE:BTCUSDT", type: "Chart Analysis" },
+        { title: "TradingView CORE Chart", url: "https://www.in.tradingview.com/chart/?symbol=BINANCE:COREUSDT", type: "Chart Analysis" },
         { title: "Dune Analytics BTCfi Dashboard", url: "https://dune.com/browse/dashboards", type: "On-Chain" },
         { title: "BitcoinLayers.org", url: "https://bitcoinlayers.org/", type: "Infrastructure" }
       ]
@@ -166,34 +166,11 @@ export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
         <p className="text-muted-foreground">Track habits, build portfolio, get AI insights</p>
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-4">
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <div className="text-2xl font-bold text-primary">{completedSteps.length}/4</div>
-            <div className="text-sm text-muted-foreground">Steps Done</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <div className="text-2xl font-bold text-green-600">{completedHabitsCount}/4</div>
-            <div className="text-sm text-muted-foreground">Daily Habits</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <div className="text-2xl font-bold text-blue-600">{Math.round(totalProgress)}%</div>
-            <div className="text-sm text-muted-foreground">Progress</div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Daily Habits - PRESERVED ORIGINAL FUNCTIONALITY WITH DETAILED CONTENT */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             🎌 Your BTCfi Investment Journey 🎌
-            <span className="text-sm font-normal text-muted-foreground">{completedHabitsCount}/4 completed</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -350,25 +327,6 @@ export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
           </CardContent>
         </Card>
       </div>
-
-      {/* Progress Overview */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Progress</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span>Overall Progress</span>
-              <span>{Math.round(totalProgress)}%</span>
-            </div>
-            <Progress value={totalProgress} className="h-2" />
-            <p className="text-xs text-muted-foreground">
-              Complete daily habits and investment steps to unlock features
-            </p>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
