@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle2, Clock, ArrowRight, ChevronDown, ChevronUp, ExternalLink, Target, BookOpen } from 'lucide-react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Badge } from '@/components/ui/badge';
+import { Plus, Filter, Search, ArrowRight, Settings, Sparkles } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useHabits } from '@/hooks/useHabits';
+import { HabitCard } from '@/components/habits/HabitCard';
+import { CreateHabitDialog } from '@/components/habits/CreateHabitDialog';
+import { UserProgress } from '@/components/habits/UserProgress';
 
 interface SimpleDashboardProps {
   points: number;
@@ -17,283 +21,176 @@ interface SimpleDashboardProps {
 export const SimpleDashboard: React.FC<SimpleDashboardProps> = ({
   onStartQuiz,
 }) => {
-  // PRESERVE ALL DAILY HABITS FUNCTIONALITY WITH DETAILED STEPS
-  const [dailyHabits, setDailyHabits] = useState([
-    { 
-      id: 1, 
-      title: "🔍 Market Analysis", 
-      subtitle: "Fundamental, Technical & On-Chain Analysis",
-      completed: false, 
-      streak: 3,
-      description: "Master the art of reading the BTCfi market like a skilled strategist",
-      tasks: [
-        "Check total TVL across all BTCfi protocols",
-        "Analyze Bitcoin price correlation with BTCfi tokens",
-        "Scan TradingView daily chart to estimate price range for liquidity positions",
-        "Analyze technical charts to identify effective BTCfi tokens for investment",
-        "Review on-chain metrics: active addresses, transaction volume",
-        "Study institutional Bitcoin adoption trends"
-      ],
-      resources: [
-        { title: "DeFiLlama Yield Analytics", url: "https://defillama.com/yields", type: "Analytics" },
-        { title: "CoinGecko BTCfi Sector", url: "https://www.coingecko.com/en/categories/bitcoin-layer-2", type: "Data" },
-        { title: "TradingView BTC Chart", url: "https://www.in.tradingview.com/chart/?symbol=BINANCE:BTCUSDT", type: "Chart Analysis" },
-        { title: "TradingView CORE Chart", url: "https://www.in.tradingview.com/chart/?symbol=BINANCE:COREUSDT", type: "Chart Analysis" },
-        { title: "Dune Analytics BTCfi Dashboard", url: "https://dune.com/browse/dashboards", type: "On-Chain" },
-        { title: "BitcoinLayers.org", url: "https://bitcoinlayers.org/", type: "Infrastructure" }
-      ]
-    },
-    { 
-      id: 2, 
-      title: "⚡ Protocol Deep Dive", 
-      subtitle: "Yield Analysis & Chain Performance",
-      completed: true, 
-      streak: 7,
-      description: "Discover the most promising protocols across different chains",
-      tasks: [
-        "Compare APY rates across major BTCfi protocols",
-        "Analyze liquidity depth and trading volume",
-        "Check protocol security audits and track record",
-        "Review governance token tokenomics"
-      ],
-      resources: [
-        { title: "Core Chain Explorer", url: "https://scan.coredao.org/", type: "Explorer" },
-        { title: "Rootstock (RSK) DeFi", url: "https://rootstock.io/", type: "Platform" },
-        { title: "BOB Network", url: "https://gobob.xyz/", type: "L2" },
-        { title: "Babylon Protocol", url: "https://babylonchain.io/", type: "Staking" },
-        { title: "Stacks Ecosystem", url: "https://www.stacks.co/", type: "Smart Contracts" }
-      ]
-    },
-    { 
-      id: 3, 
-      title: "💰 Asset Acquisition", 
-      subtitle: "Step-by-Step Investment Process",
-      completed: false, 
-      streak: 2,
-      description: "Your complete guide to acquiring BTCfi assets safely",
-      tasks: [
-        "Set up secure wallet (MetaMask/Rabby)",
-        "Add BTCfi network configurations",
-        "Acquire base assets (BTC, ETH, USDT)",
-        "Bridge assets to chosen BTCfi chains",
-        "Start with small test transactions"
-      ],
-      resources: [
-        { title: "Binance BTCfi Trading", url: "https://www.binance.com/", type: "CEX" },
-        { title: "Uniswap V3", url: "https://app.uniswap.org/", type: "DEX" },
-        { title: "1inch Aggregator", url: "https://1inch.io/", type: "DEX Aggregator" },
-        { title: "MetaMask Wallet", url: "https://metamask.io/", type: "Wallet" },
-        { title: "Rabby Wallet", url: "https://rabby.io/", type: "Multi-Chain Wallet" }
-      ]
-    },
-    { 
-      id: 4, 
-      title: "📊 Portfolio Monitoring", 
-      subtitle: "Track & Optimize Your Positions",
-      completed: true, 
-      streak: 5,
-      description: "Keep your investments performing at their best",
-      tasks: [
-        "Set up portfolio tracking dashboard",
-        "Monitor yield farming rewards daily",
-        "Track impermanent loss on LP positions",
-        "Review and rebalance monthly",
-        "Set up price alerts for major moves"
-      ],
-      resources: [
-        { title: "DeBank Portfolio Tracker", url: "https://debank.com/", type: "Portfolio" },
-        { title: "Zapper.fi", url: "https://zapper.fi/", type: "DeFi Portfolio" },
-        { title: "Apeboard", url: "https://apeboard.finance/", type: "Multi-Chain" },
-        { title: "CoinTracker", url: "https://www.cointracker.io/", type: "Tax Tracking" }
-      ]
-    }
-  ]);
+  // Enhanced habit system with all functionality
+  const { 
+    habits, 
+    userProgress, 
+    loading,
+    toggleHabit, 
+    addCustomHabit, 
+    updateHabit, 
+    deleteHabit, 
+    addJournalEntry,
+    reorderHabits 
+  } = useHabits();
 
-  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-  const [expandedHabits, setExpandedHabits] = useState<Record<number, boolean>>({});
+  const [expandedHabits, setExpandedHabits] = useState<Record<string, boolean>>({});
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterCategory, setFilterCategory] = useState<'all' | 'daily' | 'weekly' | 'monthly'>('all');
+  const [filterDifficulty, setFilterDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
 
-  // Load progress from localStorage on mount - PRESERVE FUNCTIONALITY
-  useEffect(() => {
-    const savedSteps = localStorage.getItem('nimpad_completed_steps');
-    if (savedSteps) {
-      try {
-        setCompletedSteps(JSON.parse(savedSteps));
-      } catch {}
-    }
-    const savedHabits = localStorage.getItem('nimpad_daily_habits');
-    if (savedHabits) {
-      try {
-        setDailyHabits(JSON.parse(savedHabits));
-      } catch {}
-    }
-  }, []);
-
-  // Save to localStorage when habits change - PRESERVE FUNCTIONALITY
-  useEffect(() => {
-    localStorage.setItem('nimpad_daily_habits', JSON.stringify(dailyHabits));
-  }, [dailyHabits]);
-
-  useEffect(() => {
-    localStorage.setItem('nimpad_completed_steps', JSON.stringify(completedSteps));
-  }, [completedSteps]);
-
-  // PRESERVE HABIT TOGGLE FUNCTIONALITY
-  const toggleHabit = (habitId: number) => {
-    setDailyHabits(prev =>
-      prev.map(habit =>
-        habit.id === habitId
-          ? { ...habit, completed: !habit.completed }
-          : habit
-      )
-    );
-  };
-
-  const toggleExpanded = (habitId: number) => {
+  const toggleExpanded = (habitId: string) => {
     setExpandedHabits(prev => ({
       ...prev,
       [habitId]: !prev[habitId]
     }));
   };
 
-  const completedHabitsCount = dailyHabits.filter(h => h.completed).length;
-  const totalProgress = (completedSteps.length + completedHabitsCount) / 8 * 100;
+  // Filter habits based on search and filters
+  const filteredHabits = habits.filter(habit => {
+    const matchesSearch = habit.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         habit.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         habit.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    const matchesCategory = filterCategory === 'all' || habit.category === filterCategory;
+    const matchesDifficulty = filterDifficulty === 'all' || habit.difficulty === filterDifficulty;
+    
+    return matchesSearch && matchesCategory && matchesDifficulty;
+  });
+
+  const completedHabitsCount = habits.filter(h => h.completed).length;
+
+  // Wrapper functions for HabitCard compatibility
+  const handleEdit = (habitId: string) => {
+    // This would open an edit dialog - simplified for now
+    console.log('Edit habit:', habitId);
+  };
+
+  const handleJournal = (habitId: string) => {
+    // This would open a journal dialog - simplified for now
+    console.log('Journal for habit:', habitId);
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground mt-4">Loading your habits...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="text-center py-6">
-        <h1 className="text-2xl font-bold mb-2">Welcome to your BTCfi Journey</h1>
-        <p className="text-muted-foreground">Track habits, build portfolio, get AI insights</p>
+        <h1 className="text-2xl font-bold mb-2 flex items-center justify-center gap-2">
+          <Sparkles className="w-6 h-6 text-primary" />
+          Welcome to Nimpad ✨
+        </h1>
+        <p className="text-muted-foreground">Your ultimate tool for personal growth and habit mastery</p>
       </div>
 
-      {/* Daily Habits - PRESERVED ORIGINAL FUNCTIONALITY WITH DETAILED CONTENT */}
+      {/* User Progress Section */}
+      <UserProgress progress={userProgress} habitCount={habits.length} />
+
+      {/* Habits Section */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            🎌 Your BTCfi Investment Journey 🎌
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {dailyHabits.map((habit) => (
-              <div key={habit.id} className="border rounded-lg">
-                {/* Habit Header - Always Visible */}
-                <div className="flex items-center justify-between p-4">
-                  <div 
-                    className="flex items-center gap-3 flex-1 cursor-pointer hover:opacity-80"
-                    onClick={() => toggleHabit(habit.id)}
-                  >
-                    {habit.completed ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-500" />
-                    ) : (
-                      <Clock className="w-5 h-5 text-muted-foreground" />
-                    )}
-                    <div>
-                      <div className="font-medium">{habit.title}</div>
-                      <div className="text-sm text-muted-foreground">{habit.subtitle}</div>
-                      <div className="text-xs text-muted-foreground">🔥 {habit.streak} day streak</div>
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => toggleExpanded(habit.id)}
-                    className="ml-2"
-                  >
-                    {expandedHabits[habit.id] ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                  </Button>
-                </div>
-                
-                {/* Expanded Content - Only show when expanded */}
-                {expandedHabits[habit.id] && (
-                  <div className="px-4 pb-4 space-y-4 border-t bg-muted/20">
-                    <p className="text-sm text-muted-foreground pt-4">{habit.description}</p>
-                    
-                    {/* Daily Tasks Section */}
-                    <div>
-                      <h4 className="font-medium mb-3 flex items-center text-sm">
-                        <Target className="w-4 h-4 mr-2 text-primary" />
-                        Daily Tasks
-                      </h4>
-                      <div className="space-y-2">
-                        {(habit.tasks || []).map((task, taskIndex) => (
-                          <div key={taskIndex} className="flex items-start text-sm p-2 bg-background rounded border">
-                            <CheckCircle2 className="w-4 h-4 mr-2 mt-0.5 text-green-500 flex-shrink-0" />
-                            <span>{task}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Essential Resources Section */}
-                    <div>
-                      <h4 className="font-medium mb-3 flex items-center text-sm">
-                        <BookOpen className="w-4 h-4 mr-2 text-primary" />
-                        Essential Resources
-                      </h4>
-                      <div className="grid grid-cols-1 gap-2">
-                        {(habit.resources || []).map((resource, resourceIndex) => (
-                          <div key={resourceIndex} className="flex items-center justify-between p-3 bg-background rounded border hover:bg-muted/50 transition-colors">
-                            <div className="flex-1">
-                              <div className="text-sm font-medium">{resource.title}</div>
-                              <div className="flex items-center gap-2 mt-1">
-                                <Badge variant="secondary" className="text-xs">
-                                  {resource.type}
-                                </Badge>
-                              </div>
-                            </div>
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              className="ml-2"
-                              onClick={() => window.open(resource.url, '_blank', 'noopener,noreferrer')}
-                            >
-                              <ExternalLink className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Chart Analytics Section - Only for Market Analysis */}
-                    {habit.id === 1 && (
-                      <div>
-                        <h4 className="font-medium mb-3 flex items-center text-sm">
-                          <Target className="w-4 h-4 mr-2 text-primary" />
-                          Chart Analytics Preview
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          <div className="bg-background rounded border p-3">
-                            <div className="text-xs text-muted-foreground mb-2">BTC/USDT Daily Chart</div>
-                            <img 
-                              src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=200&fit=crop&crop=center" 
-                              alt="BTC Chart Analysis" 
-                              className="w-full h-24 object-cover rounded"
-                            />
-                            <div className="text-xs mt-2 text-muted-foreground">
-                              Support: $95,000 | Resistance: $108,000
-                            </div>
-                          </div>
-                          <div className="bg-background rounded border p-3">
-                            <div className="text-xs text-muted-foreground mb-2">CORE/USDT Analysis</div>
-                            <img 
-                              src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=400&h=200&fit=crop&crop=center" 
-                              alt="CORE Chart Analysis" 
-                              className="w-full h-24 object-cover rounded"
-                            />
-                            <div className="text-xs mt-2 text-muted-foreground">
-                              Trend: Bullish | Entry: $1.20-$1.35
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <CardTitle className="flex items-center gap-2">
+              🎯 Your Habits & Routines
+              <span className="text-sm font-normal text-muted-foreground">
+                ({completedHabitsCount}/{habits.length} completed today)
+              </span>
+            </CardTitle>
+            
+            <div className="flex items-center gap-2">
+              <CreateHabitDialog onCreateHabit={addCustomHabit}>
+                <Button size="sm" className="gap-2">
+                  <Plus className="w-4 h-4" />
+                  Add Habit
+                </Button>
+              </CreateHabitDialog>
+            </div>
           </div>
+          
+          {/* Search and Filters */}
+          <div className="flex flex-col md:flex-row gap-3 mt-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Search habits..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            <Select value={filterCategory} onValueChange={(value: any) => setFilterCategory(value)}>
+              <SelectTrigger className="w-full md:w-[130px]">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="daily">Daily</SelectItem>
+                <SelectItem value="weekly">Weekly</SelectItem>
+                <SelectItem value="monthly">Monthly</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Select value={filterDifficulty} onValueChange={(value: any) => setFilterDifficulty(value)}>
+              <SelectTrigger className="w-full md:w-[130px]">
+                <SelectValue placeholder="Difficulty" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Levels</SelectItem>
+                <SelectItem value="easy">Easy</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="hard">Hard</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardHeader>
+        
+        <CardContent>
+          {filteredHabits.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-4xl mb-4">🎯</div>
+              <h3 className="text-lg font-medium mb-2">No habits found</h3>
+              <p className="text-muted-foreground mb-4">
+                {searchQuery || filterCategory !== 'all' || filterDifficulty !== 'all' 
+                  ? 'Try adjusting your search or filters'
+                  : 'Create your first habit to get started'
+                }
+              </p>
+              {(!searchQuery && filterCategory === 'all' && filterDifficulty === 'all') && (
+                <CreateHabitDialog onCreateHabit={addCustomHabit}>
+                  <Button>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Your First Habit
+                  </Button>
+                </CreateHabitDialog>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {filteredHabits.map((habit) => (
+                <HabitCard
+                  key={habit.id}
+                  habit={habit}
+                  onToggle={toggleHabit}
+                  onEdit={habit.isCustom ? handleEdit : undefined}
+                  onDelete={habit.isCustom ? deleteHabit : undefined}
+                  onJournal={handleJournal}
+                  isExpanded={expandedHabits[habit.id] || false}
+                  onToggleExpanded={toggleExpanded}
+                />
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
