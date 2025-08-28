@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+'use client';
+
+import { useState } from 'react';
 import { WalletConnection } from '@/components/WalletConnection';
 import { SimpleDashboard } from '@/components/SimpleDashboard';
 import { AIChatbot } from '@/components/AIChatbot';
 import { Navigation } from '@/components/Navigation';
 import { PortfolioBuilder } from '@/components/PortfolioBuilder';
-import { RiskAssessment } from '@/components/RiskAssessment';
 import { infoWallet } from '@/hooks/useWallet';
 import nimpadLogo from '/nimpad_logo.jpg';
 
-const Index = () => {
+export default function HomePage() {
   const [currentView, setCurrentView] = useState<'dashboard' | 'portfolio' | 'chatbot'>('dashboard');
   const { isConnected, account, connectWallet, disconnectWallet, isOnCitreaNetwork } = infoWallet();
 
@@ -87,6 +88,4 @@ const Index = () => {
       </footer>
     </div>
   );
-};
-
-export default Index;
+}
