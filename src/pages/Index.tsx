@@ -1,6 +1,4 @@
-'use client';
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { WalletConnection } from '@/components/WalletConnection';
 import { SimpleDashboard } from '@/components/SimpleDashboard';
 import { AIChatbot } from '@/components/AIChatbot';
@@ -9,7 +7,7 @@ import { PortfolioBuilder } from '@/components/PortfolioBuilder';
 import { infoWallet } from '@/hooks/useWallet';
 import nimpadLogo from '/nimpad_logo.jpg';
 
-export default function HomePage() {
+const Index = () => {
   const [currentView, setCurrentView] = useState<'dashboard' | 'portfolio' | 'chatbot'>('dashboard');
   const { isConnected, account, connectWallet, disconnectWallet, isOnCitreaNetwork } = infoWallet();
 
@@ -88,4 +86,6 @@ export default function HomePage() {
       </footer>
     </div>
   );
-}
+};
+
+export default Index;
